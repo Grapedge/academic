@@ -2,8 +2,7 @@ package me.maxct.academic.entity
 
 import java.io.Serializable
 import java.time.LocalDate
-import javax.persistence.Entity
-import javax.persistence.Table
+import javax.persistence.*
 
 /**
  * Created by imaxct on 17-7-31.
@@ -12,11 +11,17 @@ import javax.persistence.Table
 @Entity
 @Table(name = "ACA_profile")
 data class Profile(
+        @Id
+        @GeneratedValue
         val id: Long? = null,
+        @Column(length = 30)
         val name: String? = null,
+        @Column(length = 20)
         val idNo: String? = null,
+        @Column(length = 4)
         val gender: String = "未知",
         val birthday: LocalDate? = null,
+        @Column(length = 200)
         val unit: String? = null
 ) : Serializable {
     private constructor() : this(null, null, null, "未知", null, null)

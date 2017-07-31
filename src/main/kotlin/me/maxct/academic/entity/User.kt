@@ -1,6 +1,8 @@
 package me.maxct.academic.entity
 
-import java.io.Serializable
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.*
 
 /**
@@ -14,11 +16,27 @@ data class User(
         @GeneratedValue
         val id: Long? = null,
         @Column(unique = true, length = 64)
-        val username: String? = null,
+        private val username: String? = null,
         @Column(length = 64)
-        val password: String? = null,
+        private val password: String? = null,
         @ManyToMany
-        val roles: List<Role>? = null
-) : Serializable {
+        val roles: List<Role>? = null,
+        val locked: Boolean = false,
+        val expired: Boolean = false
+) : UserDetails {
+    override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.name) }
+
+    override fun isEnabled(): Boolean = true
+
+    override fun getUsername(): String = username!!
+
+    override fun isCredentialsNonExpired(): Boolean = false
+
+    override fun getPassword(): String = password!!
+
+    override fun isAccountNonExpired(): Boolean = expired
+
+    override fun isAccountNonLocked(): Boolean = locked
+
     private constructor() : this(0L, null, null, null)
 }
