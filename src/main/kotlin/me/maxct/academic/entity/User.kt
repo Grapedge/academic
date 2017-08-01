@@ -22,7 +22,10 @@ data class User(
         @ManyToMany
         val roles: List<Role>? = null,
         val locked: Boolean = false,
-        val expired: Boolean = false
+        val expired: Boolean = false,
+        @OneToOne
+        @JoinColumn
+        val profile: Profile? = null
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.name) }
 
@@ -38,5 +41,5 @@ data class User(
 
     override fun isAccountNonLocked(): Boolean = locked
 
-    private constructor() : this(0L, null, null, null)
+    private constructor() : this(locked = false, expired = false)
 }
