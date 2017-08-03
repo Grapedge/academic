@@ -6,26 +6,27 @@ import org.springframework.security.core.userdetails.UserDetails
 import javax.persistence.*
 
 /**
+ * 用户
  * Created by imaxct on 17-7-24.
  * academic
  */
 @Entity
 @Table(name = "ACA_user")
 data class User(
-        @Id
-        @GeneratedValue
-        val id: Long? = null,
-        @Column(unique = true, length = 64)
-        private val username: String? = null,
-        @Column(length = 64)
-        private val password: String? = null,
-        @ManyToMany
-        val roles: List<Role>? = null,
-        val locked: Boolean = false,
-        val expired: Boolean = false,
-        @OneToOne
-        @JoinColumn
-        val profile: Profile? = null
+    @Id
+    @GeneratedValue
+    val id: Long? = null,
+    @Column(unique = true, length = 64)
+    private val username: String? = null,
+    @Column(length = 64)
+    private val password: String? = null,
+    @ManyToMany
+    val roles: List<Role>? = null,
+    val locked: Boolean = false,
+    val expired: Boolean = false,
+    @OneToOne
+    @JoinColumn
+    val profile: Profile? = null
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.name) }
 
