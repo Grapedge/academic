@@ -21,7 +21,7 @@ data class SelectionId(
     @Column(length = 20)
     val semester: String? = null
 ) : Serializable {
-    private constructor() : this(semester = "2016-2017-2")
+    private constructor() : this(semester = "2016-2017-1")
 
     override fun equals(other: Any?): Boolean {
         val o = other as SelectionId
