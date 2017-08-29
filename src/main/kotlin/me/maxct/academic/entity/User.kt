@@ -28,7 +28,7 @@ data class User(
     @JoinColumn
     val profile: Profile? = null
 ) : UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.name) }
+    override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.authority) }
 
     override fun isEnabled(): Boolean = true
 

@@ -1,5 +1,6 @@
 package me.maxct.academic.entity
 
+import org.springframework.security.core.GrantedAuthority
 import java.io.Serializable
 import javax.persistence.*
 
@@ -16,6 +17,8 @@ data class Role(
     val id: Long? = null,
     @Column(length = 10)
     val name: String? = null
-) : Serializable {
+) : GrantedAuthority {
+    override fun getAuthority() = "ROLE_$name"
+
     private constructor() : this(null, null)
 }
