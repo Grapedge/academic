@@ -5,9 +5,9 @@ import java.io.Serializable
 import javax.persistence.*
 
 /**
- * 权限
- * Created by imaxct on 17-7-24.
- * academic
+ * 权限实体
+ * @param id id
+ * @param name 名称
  */
 @Entity
 @Table(name = "ACA_role")

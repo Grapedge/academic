@@ -7,8 +7,13 @@ import javax.persistence.*
 
 /**
  * 用户
- * Created by imaxct on 17-7-24.
- * academic
+ * @param id id
+ * @param username username
+ * @param password password
+ * @param roles roles
+ * @param locked is locked
+ * @param expired is expired
+ * @param profile profile
  */
 @Entity
 @Table(name = "ACA_user")

@@ -5,8 +5,9 @@ import javax.persistence.*
 
 /**
  * 专业
- * Created by imaxct on 17-8-1.
- * academic
+ * @param id 专业id
+ * @param name 专业名称
+ * @param academy 学院
  */
 @Entity
 @Table(name = "ACA_major")

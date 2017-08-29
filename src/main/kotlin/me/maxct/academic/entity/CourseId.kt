@@ -8,13 +8,16 @@ import javax.persistence.ManyToOne
 
 /**
  * 课程ID, 根据名字和学院确定
- * Created by imaxct on 17-8-1.
- * academic
+ * @param name 课程名字
+ * @param academy 学院
+ * @author imaxct
  */
 @Embeddable
 data class CourseId(
+
     @Column(length = 32)
     val name: String? = null,
+
     @ManyToOne
     @JoinColumn
     val academy: Academy? = null

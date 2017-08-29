@@ -7,8 +7,10 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 /**
- * Created by imaxct on 17-8-3.
- * academic
+ * @author imaxct
+ * @param course 课程
+ * @param user 用户
+ * @param semester 学期
  */
 @Embeddable
 data class SelectionId(

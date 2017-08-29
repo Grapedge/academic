@@ -6,8 +6,15 @@ import javax.persistence.*
 
 /**
  * 用户资料
- * Created by imaxct on 17-7-31.
- * academic
+ * @param id 用户id
+ * @param name 姓名
+ * @param idNo 身份证
+ * @param gender 性别
+ * @param birthday 生日
+ * @param unit 单位
+ * @param workNo 学工号
+ * @param address 地址
+ * @param major 专业
  */
 @Entity
 @Table(name = "ACA_profile")

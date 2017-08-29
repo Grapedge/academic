@@ -1,23 +1,21 @@
 package me.maxct.academic.entity
 
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 /**
  * 学院
- * Created by imaxct on 17-8-1.
- * academic
+ * @param id 学院id
+ * @param name 学院名字
  */
 @Entity
 @Table(name = "ACA_academy")
 data class Academy(
     @Id
+    @GeneratedValue
     val id: Long? = null,
-    @Column(length = 60)
-    val name: String? = null
+    @Column(length = 60, nullable = false)
+    val name: String = ""
 ) : Serializable {
-    private constructor() : this(null, null)
+    private constructor() : this(0L, "")
 }

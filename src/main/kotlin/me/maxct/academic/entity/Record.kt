@@ -6,8 +6,12 @@ import javax.persistence.*
 
 /**
  * 奖惩记录
- * Created by imaxct on 17-7-31.
- * academic
+ * @param id id
+ * @param user 奖惩对象
+ * @param performer 处理者
+ * @param timestamp 日期
+ * @param reward 是否是奖励
+ * @param description 详细描述
  */
 @Entity
 @Table(name = "ACA_record")

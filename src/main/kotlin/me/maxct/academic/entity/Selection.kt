@@ -6,8 +6,8 @@ import javax.persistence.Table
 
 /**
  * 选课记录
- * Created by imaxct on 17-8-3.
- * academic
+ * @param id 选课的复合id
+ * @param score 当前课的分数
  */
 @Entity
 @Table(name = "ACA_selection")
