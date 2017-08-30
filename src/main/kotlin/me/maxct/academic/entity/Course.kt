@@ -26,4 +26,12 @@ data class Course(
     val remaining: Int = 0
 ) : Serializable {
     private constructor() : this(credit = 0.0)
+
+    override fun equals(other: Any?): Boolean {
+        return this.hashCode() == other?.hashCode()
+    }
+
+    override fun hashCode(): Int {
+        return id!!.hashCode()
+    }
 }

@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne
  * 课程ID, 根据名字和学院确定
  * @param name 课程名字
  * @param academy 学院
+ * @param semester 学期
  * @author imaxct
  */
 @Embeddable
@@ -20,7 +21,11 @@ data class CourseId(
 
     @ManyToOne
     @JoinColumn
-    val academy: Academy? = null
+    val academy: Academy? = null,
+
+    @ManyToOne
+    @JoinColumn
+    val semester: Semester? = null
 ) : Serializable {
     private constructor() : this(null, null)
 
