@@ -1,6 +1,7 @@
 package me.maxct.academic.entity
 
 import java.io.Serializable
+import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.Table
 
@@ -12,6 +13,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "ACA_selection")
 data class Selection(
+    @EmbeddedId
     val id: SelectionId? = null,
     val score: Double = 0.0
 ) : Serializable {

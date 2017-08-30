@@ -13,6 +13,7 @@ import javax.persistence.*
 @Table(name = "ACA_major")
 data class Major(
     @Id
+    @GeneratedValue
     val id: Long? = null,
     @Column(length = 60)
     val name: String? = null,
