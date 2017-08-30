@@ -23,11 +23,11 @@ interface UserService {
     fun login(username: String, password: String): Msg<*>
 
     /**
-     * 获取个人信息(本人)
+     * 获取个人信息
      * @param id 用户id
-     * @return dto
+     * @return user
      */
-    fun info(id: Long): Msg<*>
+    fun getInfo(id: Long): User?
 
     /**
      * 用户选课
@@ -39,6 +39,30 @@ interface UserService {
 
     /**
      * 退选课程
+     * @param user user
+     * @param courseId id
+     * @return dto
      */
     fun dropCourse(user: User, courseId: CourseId): Msg<*>
+
+    /**
+     * 获取本学期已选课程
+     * @param user user
+     * @return dto
+     */
+    fun getChosenCourse(user: User): Msg<*>
+
+    /**
+     * 获取本学期课表
+     * @param user user
+     * @return dto
+     */
+    fun getCourseSchedule(user: User): Msg<*>
+
+    /**
+     * 获取奖惩记录
+     * @param user user
+     * @return dto
+     */
+    fun getRecord(user: User): Msg<*>
 }
