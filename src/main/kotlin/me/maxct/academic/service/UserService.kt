@@ -2,7 +2,6 @@ package me.maxct.academic.service
 
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.Course
-import me.maxct.academic.entity.CourseId
 import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
 
@@ -34,7 +33,7 @@ interface UserService {
     /**
      * 用户选课
      * @param user 操作用户
-     * @param courseId 课程id
+     * @param course 课程
      * @return dto
      */
     fun chooseCourse(user: User, course: Course): Msg<*>
@@ -42,7 +41,7 @@ interface UserService {
     /**
      * 退选课程
      * @param user user
-     * @param courseId id
+     * @param course course
      * @return dto
      */
     fun dropCourse(user: User, course: Course): Msg<*>
