@@ -40,9 +40,7 @@ class UserServiceImpl : UserService {
 
     }
 
-    override fun getInfo(id: Long): User? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getInfo(id: Long): User? = userRepository!!.findOne(id)
 
     override fun chooseCourse(user: User, courseId: CourseId): Msg<*> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
