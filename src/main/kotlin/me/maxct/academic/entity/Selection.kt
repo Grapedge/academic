@@ -15,7 +15,7 @@ import javax.persistence.Table
 data class Selection(
     @EmbeddedId
     val id: SelectionId? = null,
-    val score: Double = 0.0
+    val score: Double = -1.0
 ) : Serializable {
-    private constructor() : this(score = 0.0)
+    private constructor() : this(score = -1.0)
 }
