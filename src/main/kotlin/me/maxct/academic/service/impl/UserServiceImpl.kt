@@ -8,7 +8,7 @@ import me.maxct.academic.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 
 /**
@@ -44,7 +44,6 @@ class UserServiceImpl : UserService {
             user.password == password -> Msg.ok("ok")
             else -> Msg.err("密码错误")
         }
-
     }
 
     override fun getInfo(id: Long): User? = userRepository!!.findOne(id)

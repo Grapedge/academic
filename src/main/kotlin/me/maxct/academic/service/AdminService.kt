@@ -8,20 +8,12 @@ import me.maxct.academic.entity.User
 interface AdminService {
 
     /**
-     * 添加奖惩记录
+     * 添加,修改奖惩记录
      * @param user 操作用户
      * @param record record
      * @return dto
      */
-    fun createRecord(user: User, record: Record): Msg<*>
-
-    /**
-     * 修改奖惩记录
-     * @param user 操作用户
-     * @param record record
-     * @return dto
-     */
-    fun updateRecord(user: User, record: Record): Msg<*>
+    fun saveRecord(user: User, record: Record): Msg<*>
 
     /**
      * 删除奖惩记录
