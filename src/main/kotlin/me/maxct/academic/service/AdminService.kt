@@ -9,24 +9,25 @@ interface AdminService {
 
     /**
      * 添加,修改奖惩记录
-     * @param user 操作用户
+     * @param operator 操作用户
      * @param record record
      * @return dto
      */
-    fun saveRecord(user: User, record: Record): Msg<*>
+    fun saveRecord(operator: User, record: Record): Msg<*>
 
     /**
      * 删除奖惩记录
-     * @param user 操作用户
+     * @param operator 操作用户
      * @param record record
      * @return dto
      */
-    fun deleteRecord(user: User, record: Record): Msg<*>
+    fun deleteRecord(operator: User, record: Record): Msg<*>
 
     /**
      * 登记成绩
-     * @param teacher 登记教工
+     * @param operator 登记教工
      * @param selection 选课记录
      */
-    fun createScore(teacher: User, selection: Selection): Msg<*>
+    fun createScore(operator: User, selection: Selection): Msg<*>
+
 }

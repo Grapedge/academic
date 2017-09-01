@@ -4,7 +4,9 @@ import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.Academy
 import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.User
+import me.maxct.academic.repository.UserRepository
 import me.maxct.academic.service.SystemService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,9 +17,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class SystemServiceImpl : SystemService {
 
+    @Autowired
+    private val userRepository: UserRepository? = null
 
     override fun importStudentInfo(operator: User, users: List<User>): Msg<*> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        userRepository!!.save(users)
+        return Msg.ok("执行完毕")
     }
 
     override fun updateUserInfo(operator: User, user: User): Msg<*> {
