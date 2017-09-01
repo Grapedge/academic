@@ -3,6 +3,7 @@ package me.maxct.academic.entity
 import java.io.Serializable
 import javax.persistence.Embeddable
 import javax.persistence.JoinColumn
+import javax.persistence.JoinColumns
 import javax.persistence.ManyToOne
 
 /**
@@ -14,7 +15,13 @@ import javax.persistence.ManyToOne
 data class SelectionId(
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumns(
+        value = *arrayOf(
+            JoinColumn(name = "name"),
+            JoinColumn(name = "academy_id"),
+            JoinColumn(name = "semester_id")
+        )
+    )
     val course: Course? = null,
 
     @ManyToOne

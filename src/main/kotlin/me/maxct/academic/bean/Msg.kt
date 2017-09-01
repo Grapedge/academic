@@ -1,5 +1,6 @@
 package me.maxct.academic.bean
 
+import me.maxct.academic.util.StringUtil
 import java.io.Serializable
 
 /**
@@ -17,4 +18,6 @@ data class Msg<out T>(
         fun err(msg: String) = Msg(msg = msg, obj = null)
         fun err(msg: String, obj: Any) = Msg(msg = msg, obj = obj)
     }
+
+    override fun toString(): String = StringUtil.toJson(this)
 }

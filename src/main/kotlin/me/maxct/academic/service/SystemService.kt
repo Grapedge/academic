@@ -12,7 +12,7 @@ interface SystemService {
      * @param users 用户
      * @return dto
      */
-    fun importStudentInfo(users: List<User>): Msg<*>
+    fun importStudentInfo(operator: User, users: List<User>): Msg<*>
 
     /**
      * 更新用户信息

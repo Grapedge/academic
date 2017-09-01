@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class SystemServiceImpl : SystemService {
 
-    override fun importStudentInfo(users: List<User>): Msg<*> {
+
+    override fun importStudentInfo(operator: User, users: List<User>): Msg<*> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SelectionRepository : JpaRepository<Selection, SelectionId> {
     @Query("from Selection where id.user=:user")
-    fun getSelectionByUser(@Param("id") user: User): List<Selection?>
+    fun getSelectionByUser(@Param("user") user: User): List<Selection?>
 
     @Query("from Selection where id.user=:user and id.course.id.semester=:semester")
     fun getSelectionBySemesterAndUser(@Param("semester") semester: Semester, @Param("user") user: User): List<Selection?>
