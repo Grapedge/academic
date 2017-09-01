@@ -8,8 +8,7 @@ import java.time.LocalDate
  * Created by imaxct on 17-8-30.
  */
 object StringUtil {
-    @Autowired
-    private val objectMapper: ObjectMapper? = null
+    private val objectMapper: ObjectMapper = ObjectMapper()
 
     fun getSemester(): String {
         val date = LocalDate.now()
@@ -20,5 +19,5 @@ object StringUtil {
         }
     }
 
-    fun toJson(obj: Any?) : String = objectMapper!!.writeValueAsString(obj)
+    fun toJson(obj: Any?) : String = objectMapper.writeValueAsString(obj)
 }
