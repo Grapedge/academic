@@ -23,14 +23,14 @@
     </appender>
 
     <logger name="me.maxct.academic.aop.WebLog" additivity="false">
-        <appender-ref name="WebLog"/>
+        <appender-ref ref="WebLog"/>
     </logger>
 
     <logger name="me.maxct.academic.aop.ServiceLog" additivity="false">
-        <appender-ref name="ServiceLog"/>
+        <appender-ref ref="ServiceLog"/>
     </logger>
 
-    <root level="DEBUG">
-        <appender-ref name="CONSOLE"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

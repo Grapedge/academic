@@ -30,17 +30,14 @@ class WebLog {
         val attrs: ServletRequestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
         val req = attrs.request
 
-        logger.info("URL: ${req.requestURI}")
-        logger.info("METHOD: ${req.method}")
-        logger.info("IP: ${req.remoteAddr}")
-        logger.info("CLASS_METHOD: ${joinPoint.signature.declaringTypeName}.${joinPoint.signature.name}")
-        logger.info("ARGS: ${joinPoint.args.joinToString()}")
+        logger.info("\nURL: ${req.requestURI}\nMETHOD: ${req.method}\nIP: ${req.remoteAddr}\n" +
+            "CLASS_METHOD: ${joinPoint.signature.declaringTypeName}.${joinPoint.signature.name}\n" +
+            "ARGS: ${joinPoint.args.joinToString()}")
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")
     fun afterExec(ret: Any?) {
-        logger.info("RESPONSE: $ret")
-        logger.info("TIME_SPENT: ${System.currentTimeMillis() - startTime.get()} ms")
+        logger.info("\nRESPONSE: $ret\nTIME_SPENT: ${System.currentTimeMillis() - startTime.get()} ms")
     }
 
     @AfterThrowing(pointcut = "webLog()", throwing = "ex")
