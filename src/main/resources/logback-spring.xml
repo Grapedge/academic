@@ -1,0 +1,36 @@
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="WebLog" class="ch.qos.logback.core.FileAppender">
+        <file>WebLog.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ServiceLog" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
+            <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                <driverClass>com.mysql.jdbc.Driver</driverClass>
+                <jdbcUrl>jdbc:mysql://localhost:3306/log?useUnicode=true&amp;characterEncoding=utf8</jdbcUrl>
+                <user>root</user>
+                <password>million</password>
+            </dataSource>
+        </connectionSource>
+    </appender>
+
+    <logger name="me.maxct.academic.aop.WebLog" additivity="false">
+        <appender-ref name="WebLog"/>
+    </logger>
+
+    <logger name="me.maxct.academic.aop.ServiceLog" additivity="false">
+        <appender-ref name="ServiceLog"/>
+    </logger>
+
+    <root level="DEBUG">
+        <appender-ref name="CONSOLE"/>
+    </root>
+</configuration>
