@@ -75,4 +75,7 @@ class UserServiceImpl : UserService {
         = Msg.ok("ok", selectionRepository!!.getSelectionBySemesterAndUser(semester, user))
 
     override fun getRecord(user: User): Msg<*> = Msg.ok("ok", recordRepository!!.getRecordByUser(user))
+
+    override fun getCourses(semester: Semester): Msg<*> =
+        Msg.ok("ok", courseRepository!!.getCourseBySemester(semester))
 }

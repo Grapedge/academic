@@ -66,4 +66,9 @@ interface UserService {
      * @return dto
      */
     fun getRecord(user: User): Msg<*>
+
+    /**
+     * 获取本学期开设课程
+     */
+    fun getCourses(semester: Semester): Msg<*>
 }

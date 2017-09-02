@@ -1,8 +1,6 @@
 package me.maxct.academic.entity
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
+import java.io.Serializable
 import javax.persistence.*
 
 /**
@@ -22,9 +20,9 @@ data class User(
     @GeneratedValue
     val id: Long? = null,
     @Column(unique = true, length = 64)
-    private val username: String? = null,
+    val username: String? = null,
     @Column(length = 64)
-    private val password: String? = null,
+    val password: String? = null,
     @ManyToMany
     val roles: List<Role>? = null,
     val locked: Boolean = false,
@@ -32,20 +30,12 @@ data class User(
     @OneToOne
     @JoinColumn
     val profile: Profile? = null
-) : UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.authority) }
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        return this.hashCode() == (other?.hashCode() ?: super.hashCode())
+    }
 
-    override fun isEnabled(): Boolean = true
-
-    override fun getUsername(): String = username!!
-
-    override fun isCredentialsNonExpired(): Boolean = false
-
-    override fun getPassword(): String = password!!
-
-    override fun isAccountNonExpired(): Boolean = expired
-
-    override fun isAccountNonLocked(): Boolean = locked
-
-    private constructor() : this(locked = false, expired = false)
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: super.hashCode()
+    }
 }

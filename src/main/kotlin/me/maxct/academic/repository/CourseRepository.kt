@@ -2,6 +2,7 @@ package me.maxct.academic.repository
 
 import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.CourseId
+import me.maxct.academic.entity.Semester
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -23,4 +24,7 @@ interface CourseRepository : JpaRepository<Course, CourseId> {
     fun increaseCourseRemaining(@Param("courseId") courseId: CourseId): Long
 
     fun deleteById(id: CourseId): Long
+
+    @Query("from Course where id.semester=:s")
+    fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
 }
