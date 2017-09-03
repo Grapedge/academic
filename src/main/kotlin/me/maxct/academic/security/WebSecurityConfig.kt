@@ -26,7 +26,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/test/tt").permitAll()
+            .antMatchers("/js/**", "/css/**", "/fonts/**", "/**/favicon.ico").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()

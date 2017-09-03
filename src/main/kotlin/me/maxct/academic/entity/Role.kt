@@ -1,7 +1,6 @@
 package me.maxct.academic.entity
 
 import org.springframework.security.core.GrantedAuthority
-import java.io.Serializable
 import javax.persistence.*
 
 /**

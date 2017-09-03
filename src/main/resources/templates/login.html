@@ -2,13 +2,38 @@
 <html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{/css/mzui.min.css}" rel="stylesheet"/>
     <title>登录</title>
 </head>
-<body>
-<form action="/login" method="post">
-    <input name="username"/>
-    <input name="password"/>
-    <button>登录</button>
-</form>
+<body class="page">
+<div class="column fluid-v no-margin flex-nowrap">
+    <div class="cell box">
+        <div class="tile flex-center flex flex-column">
+            <div class="article"><h2>用户登录</h2></div>
+            <form action="/login" method="post">
+                <div class="control has-label-left fluid">
+                    <input class="input" id="username" name="username" placeholder="请输入用户名"/>
+                    <label for="username" title="用户名">
+                        <i class="icon icon-user"></i>
+                    </label>
+                </div>
+                <div class="control has-label-left fluid">
+                    <input class="input" id="password" name="password" type="password" placeholder="请输入密码"/>
+                    <label for="password">
+                        <i class="icon icon-lock"></i>
+                    </label>
+                </div>
+                <div class="control">
+                    <button type="submit" class="btn primary fluid">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/mzui.min.js}"></script>
+<script  th:if="${param.error}">
+    var dis = new $.Display({display: 'messager'});dis.show({content:'用户名或密码错误', type:'danger'});
+</script>
 </body>
 </html>
