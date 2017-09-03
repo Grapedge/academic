@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository
  * academic
  */
 @Repository
-interface UserRepository : JpaRepository<User, Long> {
+interface UserRepository : JpaRepository<User, String> {
 
     fun findOneByUsername(username: String): User?
 }

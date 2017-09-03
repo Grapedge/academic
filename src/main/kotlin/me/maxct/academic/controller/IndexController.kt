@@ -1,6 +1,7 @@
 package me.maxct.academic.controller
 
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
@@ -17,7 +18,13 @@ class IndexController {
     @ResponseBody
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
-    fun index(): String = "AAA"
+    fun index(): String {
+        val a = SecurityContextHolder.getContext().authentication
+        println(a.principal)
+        println(a.credentials)
+        println(a.details)
+        return "ok"
+    }
 
     @ResponseBody
     @GetMapping("/b")

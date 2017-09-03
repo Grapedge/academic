@@ -27,7 +27,7 @@ class UserServiceImpl : UserService {
     private lateinit var selectionRepository: SelectionRepository
 
     override fun register(username: String, password: String): Msg<*> =
-        if (userRepository.exists(Example.of(User(username = username)))) {
+        if (userRepository.exists(username)) {
             Msg.err("用户名已存在")
         } else {
             if (userRepository.save(User(username = username, password = password)) != null)
@@ -45,7 +45,7 @@ class UserServiceImpl : UserService {
         }
     }
 
-    override fun getInfo(id: Long): User? = userRepository.findOne(id)
+    override fun getInfo(username: String): User? = userRepository.findOne(username)
 
     override fun chooseCourse(user: User, course: Course): Msg<*> {
         val sid = SelectionId(course, user)

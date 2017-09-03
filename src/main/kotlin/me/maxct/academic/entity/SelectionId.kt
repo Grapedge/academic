@@ -32,7 +32,7 @@ data class SelectionId(
 
     override fun equals(other: Any?): Boolean {
         val o = other as SelectionId
-        return this.course?.id == o.course?.id && this.user?.id == o.user?.id
+        return this.course?.id == o.course?.id && this.user?.username == o.user?.username
     }
 
     override fun hashCode(): Int {

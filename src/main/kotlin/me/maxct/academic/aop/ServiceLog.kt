@@ -23,6 +23,6 @@ class ServiceLog {
 
     @Before("managerService() && args(operator,..)", argNames = "operator")
     fun beforeService(joinPoint: JoinPoint, operator: User){
-        logger.info("${operator.id} - ${operator.username} - ${joinPoint.signature.name}")
+        logger.info("${operator.username} -- ${joinPoint.signature.name}")
     }
 }

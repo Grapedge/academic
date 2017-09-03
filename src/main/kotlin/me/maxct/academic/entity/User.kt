@@ -14,9 +14,10 @@ import javax.persistence.*
 @Entity
 @Table(name = "ACA_user")
 data class User(
-    @Id
+    /*@Id
     @GeneratedValue
-    val id: Long? = null,
+    val id: Long? = null,*/
+    @Id
     @Column(unique = true, length = 64)
     val username: String? = null,
     @Column(length = 64)
@@ -46,6 +47,6 @@ data class User(
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: super.hashCode()
+        return username?.hashCode() ?: super.hashCode()
     }
 }

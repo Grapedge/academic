@@ -25,10 +25,10 @@ interface UserService {
 
     /**
      * 获取个人信息
-     * @param id 用户id
+     * @param username 用户名
      * @return user
      */
-    fun getInfo(id: Long): User?
+    fun getInfo(username: String): User?
 
     /**
      * 用户选课
