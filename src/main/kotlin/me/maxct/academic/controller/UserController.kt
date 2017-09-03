@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/u")
 class UserController {
     @Autowired
-    private val semesterRepository: SemesterRepository? = null
+    private lateinit var semesterRepository: SemesterRepository
     @Autowired
-    private val userService: UserService? = null
+    private lateinit var userService: UserService
 
     @GetMapping("/c")
     fun getCourse(): Msg<*> {
-        val semester: Semester = semesterRepository!!.getCurrentSemester()
-        return userService!!.getCourses(semester)
+        val semester: Semester = semesterRepository.getCurrentSemester()
+        return userService.getCourses(semester)
     }
 
 

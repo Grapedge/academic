@@ -13,7 +13,8 @@ import javax.servlet.http.HttpServletResponse
  */
 @Component
 class RestAuthenticationEntryPoint : AuthenticationEntryPoint{
-    override fun commence(request: HttpServletRequest?, response: HttpServletResponse?, authException: AuthenticationException?) {
+    override fun commence(request: HttpServletRequest?, response: HttpServletResponse?,
+                          authException: AuthenticationException?) {
         response!!.writer.write(StringUtil.toJson(Msg.err(authException?.message ?: "认证错误,重新登录")))
     }
 }

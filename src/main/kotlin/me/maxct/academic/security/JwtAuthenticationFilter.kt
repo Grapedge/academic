@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse
 class JwtAuthenticationFilter : OncePerRequestFilter() {
 
     @Autowired
-    lateinit var jwtUtil: JwtUtil
+    private lateinit var jwtUtil: JwtUtil
 
     override fun doFilterInternal(request: HttpServletRequest?, response: HttpServletResponse?, filterChain: FilterChain?) {
         try {

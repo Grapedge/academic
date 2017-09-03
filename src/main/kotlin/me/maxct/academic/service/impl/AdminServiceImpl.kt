@@ -19,21 +19,21 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class AdminServiceImpl : AdminService {
     @Autowired
-    val recordRepository: RecordRepository? = null
+    private lateinit var recordRepository: RecordRepository
     @Autowired
-    val selectionRepository: SelectionRepository? = null
+    private lateinit var selectionRepository: SelectionRepository
 
     override fun saveRecord(operator: User, record: Record): Msg<*>
-        = if (recordRepository!!.save(record) != null) Msg.ok("ok")
+        = if (recordRepository.save(record) != null) Msg.ok("ok")
     else Msg.err("保存错误")
 
     override fun deleteRecord(operator: User, record: Record): Msg<*> =
-        if (recordRepository!!.deleteById(record.id!!).toInt() == 1)
+        if (recordRepository.deleteById(record.id!!).toInt() == 1)
             Msg.ok("删除成功")
         else throw ServiceException("删除失败")
 
     override fun createScore(operator: User, selection: Selection): Msg<*> =
-        if (selectionRepository!!.updateSelectionScore(selection.id!!, selection.score) == 1)
+        if (selectionRepository.updateSelectionScore(selection.id!!, selection.score) == 1)
             Msg.ok("操作成功")
         else Msg.err("操作失败,成绩录入后无法修改")
 }

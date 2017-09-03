@@ -18,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
-    @Autowired lateinit var restAuthenticationEntryPoint: RestAuthenticationEntryPoint
-    @Autowired lateinit var jwtFilter: JwtAuthenticationFilter
+    @Autowired private lateinit var restAuthenticationEntryPoint: RestAuthenticationEntryPoint
+    @Autowired private lateinit var jwtFilter: JwtAuthenticationFilter
 
     override fun configure(web: WebSecurity?) {
         web!!.ignoring().antMatchers("/auth/**")

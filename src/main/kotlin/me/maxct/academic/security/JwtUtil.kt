@@ -18,9 +18,9 @@ import javax.servlet.http.HttpServletRequest
 @Component
 class JwtUtil {
     @Value("\${jwt.key}")
-    lateinit var signKey: String
+    private lateinit var signKey: String
     @Value("\${jwt.token-name}")
-    lateinit var tokenName: String
+    private lateinit var tokenName: String
 
     fun create(jwtUser: JwtUser): String =
         Jwts.builder()

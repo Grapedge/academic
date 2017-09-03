@@ -23,16 +23,16 @@ import org.springframework.transaction.annotation.Transactional
 class SystemServiceImpl : SystemService {
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    private lateinit var userRepository: UserRepository
 
     @Autowired
-    lateinit var academyRepository: AcademyRepository
+    private lateinit var academyRepository: AcademyRepository
 
     @Autowired
-    lateinit var courseRepository: CourseRepository
+    private lateinit var courseRepository: CourseRepository
 
     @Autowired
-    lateinit var semesterRepository: SemesterRepository
+    private lateinit var semesterRepository: SemesterRepository
 
     override fun importStudentInfo(operator: User, users: List<User>): Msg<*> {
         userRepository.save(users)
