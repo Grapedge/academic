@@ -5,7 +5,6 @@ import javax.persistence.*
 
 /**
  * 用户
- * @param id id
  * @param username username
  * @param password password
  * @param roles roles
@@ -14,16 +13,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "ACA_user")
 data class User(
-    /*@Id
-    @GeneratedValue
-    val id: Long? = null,*/
     @Id
     @Column(unique = true, length = 64)
     val username: String? = null,
     @Column(length = 64)
     val password: String? = null,
-    @OneToMany(fetch = FetchType.EAGER)
-    val roles: List<Role>? = null,
+    @Column(length = 50)
+    val roles: String? = null,
     @OneToOne
     @JoinColumn
     val profile: Profile? = null

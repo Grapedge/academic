@@ -1,5 +1,6 @@
 package me.maxct.academic.entity
 
+import com.fasterxml.jackson.databind.annotation.JsonTypeResolver
 import java.io.Serializable
 import java.time.LocalDate
 import javax.persistence.*
@@ -20,6 +21,7 @@ data class Semester(
 
     @Column(length = 12)
     val name: String = "",
+
 
     val beginDate: LocalDate? = null,
 

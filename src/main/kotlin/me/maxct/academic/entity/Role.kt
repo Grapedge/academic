@@ -1,23 +1,8 @@
 package me.maxct.academic.entity
 
-import org.springframework.security.core.GrantedAuthority
-import javax.persistence.*
-
 /**
- * 权限实体
- * @param id id
- * @param name 名称
+ * Created by imaxct on 17-9-3.
  */
-@Entity
-@Table(name = "ACA_role")
-data class Role(
-    @Id
-    @GeneratedValue
-    val id: Long? = null,
-    @Column(length = 10)
-    val name: String? = null
-) : GrantedAuthority {
-    override fun getAuthority() = "ROLE_$name"
-
-    private constructor() : this(null, null)
+enum class Role {
+    ROLE_USER, ROLE_ADMIN, ROLE_SYSTEM
 }

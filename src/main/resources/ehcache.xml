@@ -1,0 +1,14 @@
+<ehcache>
+    <cache name="courses"
+           maxEntriesLocalHeap="200"
+           timeToLiveSeconds="600"/>
+    <cache name="major"
+           maxEntriesLocalHeap="100"
+           timeToLiveSeconds="600"/>
+    <cache name="roles"
+           maxEntriesLocalHeap="10"
+           timeToLiveSeconds="800"/>
+    <cache name="semester"
+           maxEntriesLocalHeap="90"
+           timeToLiveSeconds="800"/>
+</ehcache>

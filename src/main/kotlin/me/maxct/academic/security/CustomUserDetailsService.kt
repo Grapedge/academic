@@ -19,6 +19,6 @@ class CustomUserDetailsService : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
         val user = userRepository.findOneByUsername(username!!) ?: throw UsernameNotFoundException("用户不存在")
-        return User(user.username, user.password, user.roles!!.map { SimpleGrantedAuthority(it.authority) })
+        return User(user.username, user.password, user.roles!!.split(',').map { SimpleGrantedAuthority(it) })
     }
 }

@@ -1,5 +1,6 @@
 package me.maxct.academic.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import javax.persistence.*
 
@@ -19,6 +20,7 @@ data class Major(
     val name: String? = null,
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     val academy: Academy? = null
 ) : Serializable {
     private constructor() : this(null)

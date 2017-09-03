@@ -3,6 +3,8 @@ package me.maxct.academic.repository
 import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.CourseId
 import me.maxct.academic.entity.Semester
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository
  * Created by imaxct on 17-8-30.
  */
 @Repository
+@CacheConfig(cacheNames = arrayOf("courses"))
 interface CourseRepository : JpaRepository<Course, CourseId> {
 
     @Modifying(clearAutomatically = true)
@@ -25,6 +28,7 @@ interface CourseRepository : JpaRepository<Course, CourseId> {
 
     fun deleteById(id: CourseId): Long
 
+    @Cacheable
     @Query("from Course where id.semester=:s")
     fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
 }

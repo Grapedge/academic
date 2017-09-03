@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import java.security.Principal
+import java.time.LocalDate
 
 /**
  * Created by imaxct on 17-9-3.
@@ -31,5 +32,5 @@ class IndexController {
     @ResponseBody
     @GetMapping("/b")
     @PreAuthorize("hasRole('ADMIN')")
-    fun index2(): String = "BBB"
+    fun index2(): LocalDate = LocalDate.now()
 }
