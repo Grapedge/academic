@@ -16,7 +16,7 @@ interface SemesterRepository : JpaRepository<Semester, Long> {
     @Query("from Semester where CURRENT_DATE() between beginDate and endDate")
     fun getCurrentSemester(): Semester
 
-    @Query("select count(*)>0 from Semester i" +
+    @Query("select count(*)>0 from Semester i " +
         "where ( :s between i.beginDate and i.endDate) or ( :t between i.beginDate and i.endDate)")
     fun existSemester(@Param("s") beginDate: LocalDate, @Param("t") endDate: LocalDate): Boolean
 }
