@@ -40,7 +40,7 @@ class UserServiceImpl : UserService {
         val user = userRepository.findOne(Example.of(User(username = username)))
         return when {
             user == null -> Msg.err("用户错误")
-            user.password == password -> Msg.ok("ok")
+            user.password == password -> Msg.ok("ok", user)
             else -> Msg.err("密码错误")
         }
     }

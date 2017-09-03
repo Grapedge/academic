@@ -20,7 +20,7 @@ class JwtUtil {
     @Value("\${jwt.key}")
     private lateinit var signKey: String
     @Value("\${jwt.token-name}")
-    private lateinit var tokenName: String
+    lateinit var tokenName: String
 
     fun create(jwtUser: JwtUser): String =
         Jwts.builder()

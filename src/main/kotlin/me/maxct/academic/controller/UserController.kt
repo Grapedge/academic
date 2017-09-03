@@ -5,6 +5,7 @@ import me.maxct.academic.entity.Semester
 import me.maxct.academic.repository.SemesterRepository
 import me.maxct.academic.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/u")
+@PreAuthorize("hasRole('USER')")
 class UserController {
     @Autowired
     private lateinit var semesterRepository: SemesterRepository
