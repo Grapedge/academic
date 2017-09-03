@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.security.Principal
 
 /**
  * Created by imaxct on 17-9-3.
@@ -18,8 +19,9 @@ class IndexController {
     @ResponseBody
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
-    fun index(): String {
+    fun index(principal: Principal): String {
         val a = SecurityContextHolder.getContext().authentication
+        println(principal.name)
         println(a.principal)
         println(a.credentials)
         println(a.details)
