@@ -3,6 +3,7 @@ package me.maxct.academic.service
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.Academy
 import me.maxct.academic.entity.Course
+import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
 
 interface SystemService {
@@ -45,4 +46,12 @@ interface SystemService {
      * @return dto
      */
     fun deleteCourse(operator: User, course: Course): Msg<*>
+
+    /**
+     * 添加 修改学期
+     * @param operator 操作者
+     * @param semester 学期
+     * @return dto
+     */
+    fun saveSemester(operator: User, semester: Semester): Msg<*>
 }
