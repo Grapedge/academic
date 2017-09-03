@@ -1,10 +1,11 @@
 server:
   port: 8080
+  tomcat:
+    uri-encoding: UTF-8
 
 jwt:
   key: abcdefg
   token-name: ACA-TOKEN
-
 
 spring:
   datasource:
@@ -15,3 +16,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      force-request: true
+      force-response: true
+  application:
+    name: academic
+  thymeleaf:
+    cache: false

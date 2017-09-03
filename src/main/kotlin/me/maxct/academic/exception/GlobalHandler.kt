@@ -14,10 +14,11 @@ import javax.servlet.http.HttpServletRequest
 @ControllerAdvice
 class GlobalHandler {
 
+    private val logger: Logger = LoggerFactory.getLogger(GlobalHandler::class.java)
     @ResponseBody
     @ExceptionHandler(ServiceException::class)
     fun serviceExceptionHandler(req: HttpServletRequest, ex: ServiceException): Msg<*> =
-        Msg.err(ex.message ?: "请求失败,稍候再试", req.requestURI)
+        Msg.err(ex.message ?: "请求失败,稍候再试-", req.requestURI)
 
     @ResponseBody
     @ExceptionHandler(JwtAuthException::class)
@@ -26,6 +27,8 @@ class GlobalHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception::class)
-    fun otherExceptionHandler(req: HttpServletRequest, ex: Exception): Msg<*> =
-        Msg.err("请求失败,稍候再试")
+    fun otherExceptionHandler(req: HttpServletRequest, ex: Exception): Msg<*> {
+        logger.error("----", ex)
+        return Msg.err("请求失败,稍候再试--")
+    }
 }

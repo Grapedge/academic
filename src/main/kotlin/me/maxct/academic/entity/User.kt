@@ -9,8 +9,6 @@ import javax.persistence.*
  * @param username username
  * @param password password
  * @param roles roles
- * @param locked is locked
- * @param expired is expired
  * @param profile profile
  */
 @Entity
@@ -23,14 +21,26 @@ data class User(
     val username: String? = null,
     @Column(length = 64)
     val password: String? = null,
-    @ManyToMany
+    @OneToMany(fetch = FetchType.EAGER)
     val roles: List<Role>? = null,
-    val locked: Boolean = false,
-    val expired: Boolean = false,
     @OneToOne
     @JoinColumn
     val profile: Profile? = null
 ) : Serializable {
+    /*override fun getAuthorities(): List<SimpleGrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.authority) }
+
+    override fun isEnabled(): Boolean = true
+
+    override fun getUsername(): String = username!!
+
+    override fun isCredentialsNonExpired(): Boolean = !expired
+
+    override fun getPassword(): String = password!!
+
+    override fun isAccountNonExpired(): Boolean = !expired
+
+    override fun isAccountNonLocked(): Boolean = !locked*/
+
     override fun equals(other: Any?): Boolean {
         return this.hashCode() == (other?.hashCode() ?: super.hashCode())
     }
