@@ -1,15 +1,15 @@
 package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
+import me.maxct.academic.entity.Course
+import me.maxct.academic.entity.Profile
 import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
 import me.maxct.academic.repository.SemesterRepository
 import me.maxct.academic.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.security.Principal
 
 /**
@@ -25,7 +25,7 @@ class UserController {
     private lateinit var userService: UserService
 
     @GetMapping("/c")
-    fun getCourse(): Msg<*> {
+    fun getCourses(): Msg<*> {
         val semester: Semester = semesterRepository.getCurrentSemester()
         return userService.getCourses(semester)
     }
@@ -38,4 +38,22 @@ class UserController {
     fun getRecord(principal: Principal): Msg<*> =
         userService.getRecord(User(username = principal.name))
 
+    @GetMapping("/i")
+    fun getInfo(principal: Principal): Msg<*> =
+        Msg.ok("ok", userService.getInfo(principal.name)?.profile ?: Profile())
+
+    @PostMapping("/c/{id}")
+    fun chooseCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
+        userService.chooseCourse(User(username = principal.name), Course(id = id))
+
+    @PostMapping("/d/{id}")
+    fun dropCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
+        userService.dropCourse(User(username = principal.name), Course(id = id))
+
+    @GetMapping("/s")
+    fun getCourseSchedule(principal: Principal): Msg<*> =
+        userService.getCourseSchedule(
+            User(username = principal.name),
+            semesterRepository.getCurrentSemester()
+        )
 }

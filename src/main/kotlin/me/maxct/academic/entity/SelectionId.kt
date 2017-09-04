@@ -6,12 +6,16 @@ import javax.persistence.*
 /**
  * @author imaxct
  */
+@Embeddable
 data class SelectionId(
-    val courseName: String? = null,
-    val academy: Academy? = null,
-    val semester: Semester? = null,
-    val teacher: User? = null,
+    @ManyToOne
+    @JoinColumn
+    val course: Course? = null,
+
+    @ManyToOne
+    @JoinColumn
     val user: User? = null
+
 ) : Serializable {
     private constructor() : this(user = null)
 
@@ -26,5 +30,4 @@ data class SelectionId(
         return result
     }*/
 
-    constructor(c: Course, user: User): this(c.courseName, c.academy, c.semester, teacher = c.teacher, user = user)
 }

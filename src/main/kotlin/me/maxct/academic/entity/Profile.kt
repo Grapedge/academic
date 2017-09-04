@@ -22,19 +22,29 @@ data class Profile(
     @Id
     @GeneratedValue
     val id: Long? = null,
+
     @Column(length = 30)
     val name: String? = null,
+
     @Column(length = 20)
     val idNo: String? = null,
+
     @Column(length = 4)
     val gender: String = "未知",
+
     val birthday: LocalDate? = null,
+
     @Column(length = 200)
     val unit: String? = null,
+
     @Column(length = 30)
     val workNo: String? = null,
+
     @Column(columnDefinition = "TEXT")
     val address: String? = null,
+
+    @ManyToOne
+    @JoinColumn
     val major: Major? = null
 ) : Serializable {
     private constructor() : this(gender = "未知")

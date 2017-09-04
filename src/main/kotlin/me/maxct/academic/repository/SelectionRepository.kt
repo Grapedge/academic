@@ -18,11 +18,10 @@ interface SelectionRepository : JpaRepository<Selection, SelectionId> {
     @Query("from Selection where id.user=:user")
     fun getSelectionByUser(@Param("user") user: User): List<Selection?>
 
-    @Query("from Selection where id.user=:user and id.course.id.semester=:semester")
+    @Query("from Selection where id.user=:user and id.course.semester=:semester")
     fun getSelectionBySemesterAndUser(@Param("semester") semester: Semester, @Param("user") user: User): List<Selection?>
 
     @Modifying(clearAutomatically = true)
-    @Query("update Selection s set s.score=:score where s.courseName=:id.courseName and" +
-        " s.academy=:id.academy and s.semester=:id.semester and s.user=:id.user and score<0")
-    fun updateSelectionScore(@Param("id") id: Selection, @Param("score") score: Double): Int
+    @Query("update Selection s set s.score=:score where s.id=:id and s.score<0")
+    fun updateSelectionScore(@Param("id") id: SelectionId, @Param("score") score: Double): Int
 }

@@ -13,23 +13,22 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "ACA_course")
-@IdClass(CourseId::class)
 data class Course(
-    @Id
+
+    @Id @GeneratedValue
+    val id: Long? = null,
+
     @Column(length = 40)
     val courseName: String? = null,
 
-    @Id
     @ManyToOne
     @JoinColumn
     val academy: Academy? = null,
 
-    @Id
     @ManyToOne
     @JoinColumn
     val semester: Semester? = null,
 
-    @Id
     @ManyToOne
     @JoinColumn
     val teacher: User? = null,
@@ -53,5 +52,5 @@ data class Course(
         return id!!.hashCode()
     }*/
 
-    fun getId(): CourseId = CourseId(courseName, academy, semester, teacher)
+    /*fun getId(): CourseId = CourseId(courseName, academy, semester, teacher)*/
 }

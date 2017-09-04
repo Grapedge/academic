@@ -1,5 +1,6 @@
 package me.maxct.academic.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import javax.persistence.*
 
@@ -13,33 +14,25 @@ import javax.persistence.*
 @Entity
 @Table(name = "ACA_user")
 data class User(
+
     @Id
     @Column(unique = true, length = 64)
     val username: String? = null,
+
+    @JsonIgnore
     @Column(length = 64)
     val password: String? = null,
+
     @Column(length = 50)
-    val roles: String? = null,
+    val roles: String = "ROLE_USER",
+
     @OneToOne
     @JoinColumn
     val profile: Profile? = null
 ) : Serializable {
-    /*override fun getAuthorities(): List<SimpleGrantedAuthority> = roles!!.map { SimpleGrantedAuthority(it.authority) }
-
-    override fun isEnabled(): Boolean = true
-
-    override fun getUsername(): String = username!!
-
-    override fun isCredentialsNonExpired(): Boolean = !expired
-
-    override fun getPassword(): String = password!!
-
-    override fun isAccountNonExpired(): Boolean = !expired
-
-    override fun isAccountNonLocked(): Boolean = !locked*/
 
     override fun equals(other: Any?): Boolean {
-        return this.hashCode() == (other?.hashCode() ?: super.hashCode())
+        return super.equals(other)
     }
 
     override fun hashCode(): Int {

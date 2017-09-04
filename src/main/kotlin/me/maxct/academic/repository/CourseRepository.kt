@@ -1,7 +1,6 @@
 package me.maxct.academic.repository
 
 import me.maxct.academic.entity.Course
-import me.maxct.academic.entity.CourseId
 import me.maxct.academic.entity.Semester
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -16,19 +15,19 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 @CacheConfig(cacheNames = arrayOf("courses"))
-interface CourseRepository : JpaRepository<Course, CourseId> {
+interface CourseRepository : JpaRepository<Course, Long> {
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining > 0") //TODO
-    fun decreaseCourseRemaining(@Param("courseId") courseId: CourseId): Long
+    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining > 0")
+    fun decreaseCourseRemaining(@Param("courseId") courseId: Long): Long
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining < c.total") //TODO
-    fun increaseCourseRemaining(@Param("courseId") courseId: CourseId): Long
+    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining < c.total")
+    fun increaseCourseRemaining(@Param("courseId") courseId: Long): Long
 
-    fun deleteById(id: CourseId): Long
+    fun deleteById(id: Long): Long
 
     @Cacheable
-    @Query("from Course c where c.id.semester = :s")
+    @Query("from Course c where c.semester = :s")
     fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
 }

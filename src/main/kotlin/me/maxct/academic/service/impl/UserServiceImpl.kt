@@ -52,7 +52,7 @@ class UserServiceImpl : UserService {
         return if (selectionRepository.exists(sid))
             Msg.err("已经选过${course.courseName}了")
         else if (selectionRepository.save(Selection(sid)) != null
-            && courseRepository.decreaseCourseRemaining(course.getId()) == 1L)
+            && courseRepository.decreaseCourseRemaining(course.id!!) == 1L)
             Msg.ok("选课成功")
         else throw ServiceException("选课失败,稍候再试")
     }
@@ -61,7 +61,7 @@ class UserServiceImpl : UserService {
         val sid = SelectionId(course, user)
         return if (!selectionRepository.exists(sid))
             Msg.err("未选择此课程")
-        else if (courseRepository.increaseCourseRemaining(course.getId()) == 1L) {
+        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1L) {
             selectionRepository.delete(sid)
             Msg.ok("退选成功")
         } else throw ServiceException("退选失败,稍候再试")

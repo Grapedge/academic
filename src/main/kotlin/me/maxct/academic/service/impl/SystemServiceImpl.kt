@@ -49,14 +49,7 @@ class SystemServiceImpl : SystemService {
         else Msg.ok("操作成功")
 
     override fun deleteCourse(operator: User, course: Course): Msg<*> =
-        when (courseRepository.deleteById(
-            CourseId(
-                courseName = course.courseName,
-                academy = course.academy,
-                semester = course.semester,
-                teacher = course.teacher
-            ))
-        ) {
+        when (courseRepository.deleteById(course.id!!)) {
             1L -> Msg.ok("删除成功")
             else -> throw ServiceException("删除失败")
         }
