@@ -20,8 +20,20 @@ data class Selection(
     val semester: Semester? = null,
 
     @Id @ManyToOne @JoinColumn
+    val teacher: User? = null,
+
+    @Id @ManyToOne @JoinColumn
     val user: User? = null,
+
     val score: Double = -1.0
 ) : Serializable {
     private constructor() : this(score = -1.0)
+    constructor(id: SelectionId): this(
+        courseName = id.courseName,
+        academy = id.academy,
+        semester = id.semester,
+        teacher = id.teacher,
+        user = id.user
+    )
+    fun getId(): SelectionId = SelectionId(courseName, academy, semester, teacher, user)
 }

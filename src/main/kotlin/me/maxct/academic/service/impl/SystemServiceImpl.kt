@@ -1,10 +1,7 @@
 package me.maxct.academic.service.impl
 
 import me.maxct.academic.bean.Msg
-import me.maxct.academic.entity.Academy
-import me.maxct.academic.entity.Course
-import me.maxct.academic.entity.Semester
-import me.maxct.academic.entity.User
+import me.maxct.academic.entity.*
 import me.maxct.academic.exception.ServiceException
 import me.maxct.academic.repository.AcademyRepository
 import me.maxct.academic.repository.CourseRepository
@@ -52,7 +49,14 @@ class SystemServiceImpl : SystemService {
         else Msg.ok("操作成功")
 
     override fun deleteCourse(operator: User, course: Course): Msg<*> =
-        when (courseRepository.deleteById(course.id!!)) {
+        when (courseRepository.deleteById(
+            CourseId(
+                courseName = course.courseName,
+                academy = course.academy,
+                semester = course.semester,
+                teacher = course.teacher
+            ))
+        ) {
             1L -> Msg.ok("删除成功")
             else -> throw ServiceException("删除失败")
         }

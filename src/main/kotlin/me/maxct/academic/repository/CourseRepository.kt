@@ -19,11 +19,11 @@ import org.springframework.stereotype.Repository
 interface CourseRepository : JpaRepository<Course, CourseId> {
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining > 0")
+    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining > 0") //TODO
     fun decreaseCourseRemaining(@Param("courseId") courseId: CourseId): Long
 
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining < c.total")
+    @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining < c.total") //TODO
     fun increaseCourseRemaining(@Param("courseId") courseId: CourseId): Long
 
     fun deleteById(id: CourseId): Long

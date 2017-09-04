@@ -7,9 +7,10 @@ import javax.persistence.*
  * @author imaxct
  */
 data class SelectionId(
-    val course: Course? = null,
+    val courseName: String? = null,
     val academy: Academy? = null,
     val semester: Semester? = null,
+    val teacher: User? = null,
     val user: User? = null
 ) : Serializable {
     private constructor() : this(user = null)
@@ -24,4 +25,6 @@ data class SelectionId(
         result = 31 * result + (user?.hashCode() ?: 0)
         return result
     }*/
+
+    constructor(c: Course, user: User): this(c.courseName, c.academy, c.semester, teacher = c.teacher, user = user)
 }

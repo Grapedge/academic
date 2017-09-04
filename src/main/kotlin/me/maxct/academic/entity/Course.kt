@@ -52,4 +52,6 @@ data class Course(
     override fun hashCode(): Int {
         return id!!.hashCode()
     }*/
+
+    fun getId(): CourseId = CourseId(courseName, academy, semester, teacher)
 }
