@@ -123,7 +123,7 @@ var Zepto = (function() {
       $.map(element.childNodes, function(node){ if (node.nodeType == 1) return node })
   }
 
-  // `$.zepto.fragment` takes a html string and an optional tag name
+  // `$.zepto.fragment` takes a html string and an optional tag courseName
   // to generate DOM nodes nodes from the given html string.
   // The generated DOM nodes are returned as an array.
   // This function can be overriden in plugins for example to make
@@ -258,7 +258,7 @@ var Zepto = (function() {
     var found,
         maybeID = selector[0] == '#',
         maybeClass = !maybeID && selector[0] == '.',
-        nameOnly = maybeID || maybeClass ? selector.slice(1) : selector, // Ensure that a 1 char tag name still gets checked
+        nameOnly = maybeID || maybeClass ? selector.slice(1) : selector, // Ensure that a 1 char tag courseName still gets checked
         isSimple = simpleSelectorRE.test(nameOnly)
     return (isDocument(element) && isSimple && maybeID) ?
       ( (found = element.getElementById(nameOnly)) ? [found] : [] ) :
@@ -1994,7 +1994,7 @@ window.CoreLib = window['jQuery'] || window['Zepto'];
             target = options.element || that.$;
         }
 
-        target = $(target).addClass(STR_DISPLAY).attr('data-' + STR_DISPLAY + '-name', options.name);
+        target = $(target).addClass(STR_DISPLAY).attr('data-' + STR_DISPLAY + '-courseName', options.name);
         if(!target.parent().length) {
             target.appendTo(options.container);
         }
@@ -2360,8 +2360,8 @@ window.CoreLib = window['jQuery'] || window['Zepto'];
     Display.DEFAULT = {
         // display: '',    // the display type
 
-        trigger: TAP_EVENT_NAME,        // trigger event name
-        // name: '',              // unique name
+        trigger: TAP_EVENT_NAME,        // trigger event courseName
+        // courseName: '',              // unique courseName
         triggerMethod: 'show', // trigger method: show, toggle, hide
 
         // target: null,   // page, tooltip, 
@@ -2438,7 +2438,7 @@ window.CoreLib = window['jQuery'] || window['Zepto'];
         $('[data-' + STR_DISPLAY + ']').display();
 
         $(document).on(TAP_EVENT_NAME, '[data-dismiss="' + STR_DISPLAY + '"]', function() {
-            var $this = $(this), dataName = 'data-' + STR_DISPLAY + '-name';
+            var $this = $(this), dataName = 'data-' + STR_DISPLAY + '-courseName';
             name = $this.attr(dataName);
             if(!name || name == 'null') name = $this.closest('.' + STR_DISPLAY).attr(dataName);
             Display.dismiss(name);
@@ -3274,7 +3274,7 @@ window.CoreLib = window['jQuery'] || window['Zepto'];
                                         if($.isArray(msg) && msg.length) {
                                             msg = msg.length > 1? ('<ul><li>' + msg.join('</li><li>') + '</li></ul>') : msg[0];
                                         }
-                                        var $group = $form.find('#' + msgId + ', [name="' + msgId + '"]').closest('.control');
+                                        var $group = $form.find('#' + msgId + ', [courseName="' + msgId + '"]').closest('.control');
                                         if($group.length) {
                                             var $msg = $group.find('.help-text');
                                             if(!$msg.length) {

@@ -3,10 +3,6 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
-jwt:
-  key: abcdefg
-  token-name: ACA-TOKEN
-
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -26,3 +22,8 @@ spring:
     name: academic
   thymeleaf:
     cache: false
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+
+

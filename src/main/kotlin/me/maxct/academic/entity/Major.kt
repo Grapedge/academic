@@ -19,7 +19,7 @@ data class Major(
     @Column(length = 60)
     val name: String? = null,
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "academy_id")
     @JsonIgnore
     val academy: Academy? = null
 ) : Serializable {

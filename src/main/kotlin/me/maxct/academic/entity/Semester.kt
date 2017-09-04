@@ -1,6 +1,5 @@
 package me.maxct.academic.entity
 
-import com.fasterxml.jackson.databind.annotation.JsonTypeResolver
 import java.io.Serializable
 import java.time.LocalDate
 import javax.persistence.*
@@ -8,7 +7,7 @@ import javax.persistence.*
 /**
  * 学期
  * @param id id
- * @param name name
+ * @param name courseName
  * @param beginDate 学期开始时间
  * @param endDate 学期结束时间
  */
@@ -29,11 +28,11 @@ data class Semester(
 ) : Serializable {
     private constructor(): this(name = "")
 
-    override fun equals(other: Any?): Boolean {
+    /*override fun equals(other: Any?): Boolean {
         return this.hashCode() == other?.hashCode()
     }
 
     override fun hashCode(): Int {
         return id!!.hashCode()
-    }
+    }*/
 }

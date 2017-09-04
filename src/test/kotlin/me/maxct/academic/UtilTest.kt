@@ -27,7 +27,7 @@ class UtilTest {
     fun testJson(){
         val c = Course(
             id = CourseId(
-                name = "aaa",
+                courseName = "aaa",
                 academy = Academy(
                     id = 1L, name = "academy"
                 ),

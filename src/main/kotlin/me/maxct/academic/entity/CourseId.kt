@@ -1,42 +1,31 @@
 package me.maxct.academic.entity
 
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Embeddable
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 
 /**
  * 课程ID, 根据名字和学院确定
- * @param name 课程名字
- * @param academy 学院
- * @param semester 学期
+ * @param courseName 课程名字
+ * @param academy 学院id
+ * @param semester 学期id
+ * @param teacher 教师用户名
  * @author imaxct
  */
-@Embeddable
 data class CourseId(
-
-    @Column(length = 32)
-    val name: String? = null,
-
-    @ManyToOne
-    @JoinColumn
+    val courseName: String? = null,
     val academy: Academy? = null,
-
-    @ManyToOne
-    @JoinColumn
-    val semester: Semester? = null
+    val semester: Semester? = null,
+    val teacher: User? = null
 ) : Serializable {
-    private constructor() : this(null, null)
+    private constructor() : this(courseName = null)
 
-    override fun equals(other: Any?): Boolean {
+    /*override fun equals(other: Any?): Boolean {
         val o = other as CourseId
-        return this.name.equals(o.name) && this.academy?.id == o.academy?.id
+        return this.courseName.equals(o.courseName) && this.academy?.id == o.academy?.id
     }
 
     override fun hashCode(): Int {
-        var result = name?.hashCode() ?: 0
+        var result = courseName?.hashCode() ?: 0
         result = 31 * result + (academy?.hashCode() ?: 0)
         return result
-    }
+    }*/
 }

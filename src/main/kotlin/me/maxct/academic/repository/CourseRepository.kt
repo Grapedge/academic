@@ -29,6 +29,6 @@ interface CourseRepository : JpaRepository<Course, CourseId> {
     fun deleteById(id: CourseId): Long
 
     @Cacheable
-    @Query("from Course where id.semester=:s")
+    @Query("from Course c where c.id.semester = :s")
     fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
 }

@@ -50,7 +50,7 @@ class UserServiceImpl : UserService {
     override fun chooseCourse(user: User, course: Course): Msg<*> {
         val sid = SelectionId(course, user)
         return if (selectionRepository.exists(sid))
-            Msg.err("已经选过${course.id?.name}了")
+            Msg.err("已经选过${course.id?.courseName}了")
         else if (selectionRepository.save(Selection(id = sid, score = -1.0)) != null
             && courseRepository.decreaseCourseRemaining(course.id!!) == 1L)
             Msg.ok("选课成功")

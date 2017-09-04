@@ -19,11 +19,11 @@ data class Academy(
 ) : Serializable {
     private constructor() : this(0L, "")
 
-    override fun equals(other: Any?): Boolean {
+    /*override fun equals(other: Any?): Boolean {
         return this.hashCode() == other?.hashCode()
     }
 
     override fun hashCode(): Int {
         return id!!.hashCode()
-    }
+    }*/
 }
