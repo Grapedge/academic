@@ -23,17 +23,23 @@ class AdminServiceImpl : AdminService {
     @Autowired
     private lateinit var selectionRepository: SelectionRepository
 
-    override fun saveRecord(operator: User, record: Record): Msg<*>
-        = if (recordRepository.save(record) != null) Msg.ok("ok")
-    else Msg.err("保存错误")
+    override fun saveRecord(operator: User, record: Record): Msg<*> =
+        when {
+            recordRepository.save(record) != null -> Msg.ok("操作成功")
+            else -> Msg.err("保存错误")
+        }
 
     override fun deleteRecord(operator: User, record: Record): Msg<*> =
-        if (recordRepository.deleteById(record.id!!).toInt() == 1)
-            Msg.ok("删除成功")
-        else throw ServiceException("删除失败")
+        when {
+            record.performer != operator -> Msg.err("无法删除本人户可以")
+            (recordRepository.deleteById(record.id!!).toInt() == 1) -> Msg.ok("删除成功")
+            else -> throw ServiceException("删除失败")
+        }
 
     override fun createScore(operator: User, selection: Selection): Msg<*> =
-        if (selectionRepository.updateSelectionScore(selection.id!!, selection.score) == 1)
-            Msg.ok("操作成功")
-        else Msg.err("操作失败,成绩录入后无法修改")
+        when {
+            selection.id?.course?.teacher != operator -> Msg.err("非本人教授课程,没有权限操作")
+            selectionRepository.updateSelectionScore(selection.id, selection.score) == 1 -> Msg.ok("操作成功")
+            else -> Msg.err("操作失败,成绩录入后无法修改")
+        }
 }

@@ -1,9 +1,6 @@
 package me.maxct.academic.repository
 
-import me.maxct.academic.entity.Selection
-import me.maxct.academic.entity.SelectionId
-import me.maxct.academic.entity.Semester
-import me.maxct.academic.entity.User
+import me.maxct.academic.entity.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -24,4 +21,7 @@ interface SelectionRepository : JpaRepository<Selection, SelectionId> {
     @Modifying(clearAutomatically = true)
     @Query("update Selection s set s.score=:score where s.id=:id and s.score<0")
     fun updateSelectionScore(@Param("id") id: SelectionId, @Param("score") score: Double): Int
+
+    @Query("from Selection s where s.id.course=:c")
+    fun getSelectionByCourse(@Param("c") course: Course): List<Selection?>
 }

@@ -2,6 +2,7 @@ package me.maxct.academic.repository
 
 import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.Semester
+import me.maxct.academic.entity.User
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -30,4 +31,7 @@ interface CourseRepository : JpaRepository<Course, Long> {
     @Cacheable
     @Query("from Course c where c.semester = :s")
     fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
+
+    @Query("from Course c where c.teacher=:u")
+    fun getCourseByTeacher(@Param("u") teacher: User): List<Course?>
 }

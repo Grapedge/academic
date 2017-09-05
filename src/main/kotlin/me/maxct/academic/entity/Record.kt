@@ -19,15 +19,20 @@ data class Record(
     @Id
     @GeneratedValue
     val id: Long? = null,
+
     @ManyToOne
     @JoinColumn
     val user: User? = null,
+
     @ManyToOne
     @JoinColumn
     val performer: User? = null,
+
     @Column(name = "record_time")
     val timestamp: LocalDate = LocalDate.now(),
+
     val reward: Boolean = false,
+
     @Column(length = 500)
     val description: String? = null
 ) : Serializable {
