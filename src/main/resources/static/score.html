@@ -1,0 +1,44 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th>课程ID</th>
+        <th>课程名</th>
+        <th>教师</th>
+        <th>学分</th>
+        <th>选课人数</th>
+        <th>成绩</th>
+    </tr>
+    </thead>
+    <tbody id="score">
+    <tr v-for="(it,idx) in arr">
+        <td>{{ it.id.course.id }}</td>
+        <td>{{ it.id.course.name }}</td>
+        <td>{{ it.id.course.teacher.profile.name }}</td>
+        <td>{{ it.id.course.credit }}</td>
+        <td>{{ it.id.course.total }}</td>
+        <td>{{ it.score < 0? '未公布' : it.score }}</td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    var score = new Vue({
+        el: '#score',
+        data:{arr:{}},
+        methods:{
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'u/ch',type:'GET',dataType:'json',
+                    success: function (res) {
+                        if (res.ok) _self.arr = res.obj;
+                        else Tip.show(res.msg);
+                    },
+                    error: function () {
+                        Tip.show()
+                    }
+                });
+            }
+        }
+    });
+    score.loadData();
+</script>

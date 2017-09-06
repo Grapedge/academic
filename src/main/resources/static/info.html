@@ -1,0 +1,73 @@
+<div class="layer">
+    <div class="list" id="info-list" v-if="x">
+        <a class="item">
+            <i class="icon-user"></i>
+            &nbsp;{{ x.name ? x.name : '未录入' }}
+            <div class="title"></div>
+            <label class="label special">姓名</label>
+        </a>
+        <a class="item">
+            <i class="icon-calendar"></i>
+            &nbsp;{{ x.birthday ? x.birthday : '未录入' }}
+            <div class="title"></div>
+            <label class="label danger">生日</label>
+        </a>
+        <a class="item">
+            <i class="icon-mars"></i>
+            &nbsp;{{ x.gender ? x.gender : '未录入' }}
+            <div class="title"></div>
+            <label class="label primary">性别</label>
+        </a>
+        <a class="item">
+            <i class="icon-newspaper-o"></i>
+            &nbsp;{{ x.idNo ? x.idNo : '未录入' }}
+            <div class="title"></div><label class="label success">身份证</label>
+        </a>
+        <a class="item">
+            <i class="icon-book"></i>
+            &nbsp;{{ x.major ? x.major.name : '未录入' }}
+            <div class="title"></div>
+            <label class="label primary">专业</label>
+        </a>
+        <a class="item">
+            <i class="icon-list-alt"></i>
+            &nbsp;{{ x.workNo ? x.workNo : '未录入' }}
+            <div class="title"></div>
+            <label class="label info">学工号</label>
+        </a>
+        <a class="item">
+            &nbsp;{{ x.unit ? x.unit : '未录入' }}
+            <div class="title"></div>
+            <label class="label special">单位</label>
+        </a>
+        <a class="item">
+            &nbsp;{{ x.address ? x.address : '未录入' }}
+            <div class="title"></div>
+            <label class="label important">地址</label>
+        </a>
+    </div>
+</div>
+<script>
+    var info = new Vue({
+        el: '#info-list',
+        data: {
+            x: null
+        },
+        methods: {
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'u/i', type: 'GET', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.$data.x = res.obj;
+                        else Tip.show(res.msg);
+                    },
+                    error: function () {
+                        Tip.show('请求数据失败')
+                    }
+                });
+            }
+        }
+    });
+    info.loadData();
+</script>
