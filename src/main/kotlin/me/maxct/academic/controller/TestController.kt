@@ -19,5 +19,5 @@ class TestController {
     fun testUtil(): String  = StringUtil.toJson(Msg.ok("ok"))
 
     @PostMapping("/r")
-    fun testRecord(record: Record): Record = record
+    fun testRecord(@ModelAttribute record: Record): Record = record
 }

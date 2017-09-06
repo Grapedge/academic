@@ -36,5 +36,7 @@ data class Record(
     @Column(length = 500)
     val description: String? = null
 ) : Serializable {
-    private constructor() : this(reward = false)
+    private constructor() : this(
+        id = null, user = null, performer = null, timestamp = LocalDate.now(), reward = false, description = null
+    )
 }

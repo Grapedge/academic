@@ -16,11 +16,12 @@ data class Major(
     @Id
     @GeneratedValue
     val id: Long? = null,
+
     @Column(length = 60)
     val name: String? = null,
+
     @ManyToOne
     @JoinColumn(name = "academy_id")
-    @JsonIgnore
     val academy: Academy? = null
 ) : Serializable {
     private constructor() : this(null)

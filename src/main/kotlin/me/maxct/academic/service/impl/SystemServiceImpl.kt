@@ -3,10 +3,7 @@ package me.maxct.academic.service.impl
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.*
 import me.maxct.academic.exception.ServiceException
-import me.maxct.academic.repository.AcademyRepository
-import me.maxct.academic.repository.CourseRepository
-import me.maxct.academic.repository.SemesterRepository
-import me.maxct.academic.repository.UserRepository
+import me.maxct.academic.repository.*
 import me.maxct.academic.service.SystemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -30,6 +27,9 @@ class SystemServiceImpl : SystemService {
 
     @Autowired
     private lateinit var semesterRepository: SemesterRepository
+
+    @Autowired
+    private lateinit var majorRepository: MajorRepository
 
     override fun importStudentInfo(operator: User, users: List<User>): Msg<*> {
         userRepository.save(users)
@@ -61,5 +61,14 @@ class SystemServiceImpl : SystemService {
             Msg.ok("操作成功")
         else ->
             Msg.err("操作失败,稍候再试")
+    }
+
+    override fun saveMajor(operator: User, major: Major): Msg<*> =
+        if (majorRepository.save(major) != null) Msg.ok("保存成功")
+        else Msg.err("保存失败")
+
+    override fun getUserInfo(operator: User, id: String): Msg<*> {
+        val u = userRepository.findOneByUsername(id) ?: return Msg.err("用户不存在")
+        return Msg.ok("ok", u)
     }
 }

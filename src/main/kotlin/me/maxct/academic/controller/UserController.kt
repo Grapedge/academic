@@ -5,6 +5,8 @@ import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.Profile
 import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
+import me.maxct.academic.repository.AcademyRepository
+import me.maxct.academic.repository.MajorRepository
 import me.maxct.academic.repository.SemesterRepository
 import me.maxct.academic.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,37 +25,59 @@ class UserController {
     private lateinit var semesterRepository: SemesterRepository
     @Autowired
     private lateinit var userService: UserService
+    @Autowired
+    private lateinit var majorRepository: MajorRepository
+    @Autowired
+    private lateinit var academyRepository: AcademyRepository
 
+
+    //获取当前学期开设课程
     @GetMapping("/c")
     fun getCourses(): Msg<*> {
         val semester: Semester = semesterRepository.getCurrentSemester()
         return userService.getCourses(semester)
     }
 
+    //获取所有已选课程
     @GetMapping("/ch")
     fun getChosenCourse(principal: Principal): Msg<*> =
         userService.getChosenCourse(User(username = principal.name))
 
+    //获取奖惩记录
     @GetMapping("/r")
     fun getRecord(principal: Principal): Msg<*> =
         userService.getRecord(User(username = principal.name))
 
+    //获取自己的信息
     @GetMapping("/i")
     fun getInfo(principal: Principal): Msg<*> =
         Msg.ok("ok", userService.getInfo(principal.name)?.profile ?: Profile())
 
+    //选课
     @PostMapping("/c/{id}")
     fun chooseCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
         userService.chooseCourse(User(username = principal.name), Course(id = id))
 
+    //退选
     @PostMapping("/d/{id}")
     fun dropCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
         userService.dropCourse(User(username = principal.name), Course(id = id))
 
+    //获取本学期课表
     @GetMapping("/s")
     fun getCourseSchedule(principal: Principal): Msg<*> =
         userService.getCourseSchedule(
             User(username = principal.name),
             semesterRepository.getCurrentSemester()
         )
+
+    //获取所有学院
+    @GetMapping("/a")
+    fun getAllAcademy(): Msg<*> =
+        Msg.ok("ok", academyRepository.getAll())
+
+    //获取所有专业
+    @GetMapping("/m")
+    fun getAllMajor(): Msg<*> =
+        Msg.ok("ok", majorRepository.getAll())
 }

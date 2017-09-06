@@ -1,10 +1,7 @@
 package me.maxct.academic.service
 
 import me.maxct.academic.bean.Msg
-import me.maxct.academic.entity.Academy
-import me.maxct.academic.entity.Course
-import me.maxct.academic.entity.Semester
-import me.maxct.academic.entity.User
+import me.maxct.academic.entity.*
 
 interface SystemService {
 
@@ -54,4 +51,20 @@ interface SystemService {
      * @return dto
      */
     fun saveSemester(operator: User, semester: Semester): Msg<*>
+
+    /**
+     * 创建 修改专业
+     * @param operator 操作者
+     * @param major 专业
+     * @return dto
+     */
+    fun saveMajor(operator: User, major: Major): Msg<*>
+
+    /**
+     * 获取用户信息
+     * @param operator 操作者
+     * @param id username
+     * @return dto
+     */
+    fun getUserInfo(operator: User, id: String): Msg<*>
 }

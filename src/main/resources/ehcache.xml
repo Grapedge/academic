@@ -1,9 +1,12 @@
 <ehcache>
+    <cache name="academy"
+           maxEntriesLocalHeap="90"
+           timeToLiveSeconds="800"/>
     <cache name="courses"
-           maxEntriesLocalHeap="200"
+           maxEntriesLocalHeap="900"
            timeToLiveSeconds="600"/>
     <cache name="major"
-           maxEntriesLocalHeap="100"
+           maxEntriesLocalHeap="200"
            timeToLiveSeconds="600"/>
     <cache name="roles"
            maxEntriesLocalHeap="10"
