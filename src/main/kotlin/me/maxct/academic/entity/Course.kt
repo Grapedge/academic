@@ -40,7 +40,10 @@ data class Course(
 
     val total: Int = 0,
 
-    val remaining: Int = 0
+    val remaining: Int = 0,
+
+    val courseOrder: Int = 1,
+    val day: Int = 1
 ) : Serializable {
     private constructor() : this(credit = 0.0)
 

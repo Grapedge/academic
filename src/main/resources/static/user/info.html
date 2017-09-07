@@ -36,11 +36,13 @@
             <label class="label info">学工号</label>
         </a>
         <a class="item">
+            <i class="icon-group"></i>
             &nbsp;{{ x.unit ? x.unit : '未录入' }}
             <div class="title"></div>
             <label class="label special">单位</label>
         </a>
         <a class="item">
+            <i class="icon-location-arrow"></i>
             &nbsp;{{ x.address ? x.address : '未录入' }}
             <div class="title"></div>
             <label class="label important">地址</label>
@@ -50,9 +52,7 @@
 <script>
     var info = new Vue({
         el: '#info-list',
-        data: {
-            x: null
-        },
+        data: {x: null},
         methods: {
             loadData: function () {
                 var _self = this;

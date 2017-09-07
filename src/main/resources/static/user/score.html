@@ -1,36 +1,38 @@
-<table class="table">
-    <thead>
-    <tr>
-        <th>课程ID</th>
-        <th>学期</th>
-        <th>课程名</th>
-        <th>教师</th>
-        <th>学分</th>
-        <th>选课人数</th>
-        <th>成绩</th>
-    </tr>
-    </thead>
-    <tbody id="score">
-    <tr v-for="(it,idx) in arr">
-        <td>{{ it.id.course.id }}</td>
-        <td>{{ it.id.course.semester.name}}</td>
-        <td>{{ it.id.course.courseName }}</td>
-        <td>{{ it.id.course.teacher.profile ? it.id.course.teacher.profile.name : '未知' }}</td>
-        <td>{{ it.id.course.credit }}</td>
-        <td>{{ it.id.course.total }}</td>
-        <td>{{ it.score < 0? '未公布' : it.score }}</td>
-    </tr>
-    </tbody>
-</table>
+<div class="layer">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>课程ID</th>
+            <th>学期</th>
+            <th>课程名</th>
+            <th>教师</th>
+            <th>学分</th>
+            <th>选课人数</th>
+            <th>成绩</th>
+        </tr>
+        </thead>
+        <tbody id="score">
+        <tr v-for="(it,idx) in arr">
+            <td>{{ it.courseId }}</td>
+            <td>{{ it.semester}}</td>
+            <td>{{ it.courseName }}</td>
+            <td>{{ it.teacher ? it.teacher : '未知' }}</td>
+            <td>{{ it.credit }}</td>
+            <td>{{ it.total }}</td>
+            <td>{{ it.score < 0? '未公布' : it.score }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <script>
     var score = new Vue({
         el: '#score',
-        data:{arr:{}},
-        methods:{
+        data: {arr: {}},
+        methods: {
             loadData: function () {
                 var _self = this;
                 $.ajax({
-                    url: '/u/ch',type:'GET',dataType:'json',
+                    url: '/u/ch', type: 'GET', dataType: 'json',
                     success: function (res) {
                         if (res.ok) _self.arr = res.obj;
                         else Tip.show(res.msg);

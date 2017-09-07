@@ -1,6 +1,7 @@
 package me.maxct.academic.service.impl
 
 import me.maxct.academic.bean.Msg
+import me.maxct.academic.bean.NetMsg
 import me.maxct.academic.entity.*
 import me.maxct.academic.exception.ServiceException
 import me.maxct.academic.repository.*
@@ -67,8 +68,22 @@ class UserServiceImpl : UserService {
         } else throw ServiceException("退选失败,稍候再试")
     }
 
-    override fun getChosenCourse(user: User): Msg<*>
-        = Msg.ok("ok", selectionRepository.getSelectionByUser(user))
+    override fun getChosenCourse(user: User): Msg<*> {
+        val list = selectionRepository.getSelectionByUser(user)
+        val arr = ArrayList<Any>()
+        for (x in list) {
+            val obj = NetMsg()
+            obj.put("courseId", x?.id?.course?.id)
+                .put("semester", x?.id?.course?.semester?.name)
+                .put("courseName", x?.id?.course?.courseName)
+                .put("teacher", x?.id?.course?.teacher?.profile?.name)
+                .put("credit", x?.id?.course?.credit)
+                .put("total", x?.id?.course?.total)
+                .put("score", x?.score)
+            arr.add(obj.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 
     override fun getCourseSchedule(user: User, semester: Semester): Msg<*>
         = Msg.ok("ok", selectionRepository.getSelectionBySemesterAndUser(semester, user))
