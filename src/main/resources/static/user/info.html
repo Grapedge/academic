@@ -57,7 +57,7 @@
             loadData: function () {
                 var _self = this;
                 $.ajax({
-                    url: 'u/i', type: 'GET', dataType: 'json',
+                    url: '/u/i', type: 'GET', dataType: 'json',
                     success: function (res) {
                         if (res.ok) _self.$data.x = res.obj;
                         else Tip.show(res.msg);

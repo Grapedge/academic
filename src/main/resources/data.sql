@@ -48,3 +48,9 @@ VALUES
   (3, '山东省济南市高新区舜华路1500号', '1999-09-19 22:28:05', '男', '333120199909191131', '李四', '山东大学',
    '201500301002', 1);
 COMMIT;
+
+BEGIN ;
+INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301001', 1);
+INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301002', 1);
+INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301001', 2);
+COMMIT ;
