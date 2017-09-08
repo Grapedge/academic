@@ -4,8 +4,11 @@
         <tr>
             <th>课程ID</th>
             <th>课程名</th>
+            <th>开设学院</th>
             <th>学期</th>
             <th>上课周次</th>
+            <th>上课星期</th>
+            <th>上课节次</th>
             <th>教师</th>
             <th>学分</th>
             <th>选课情况</th>
@@ -13,12 +16,62 @@
         </tr>
         </thead>
         <tbody id="course">
-
+        <tr v-for="(it,idx) in arr">
+            <td>{{ it.id }}</td>
+            <td>{{ it.name }}</td>
+            <td>{{ it.academy }}</td>
+            <td>{{ it.semester }}</td>
+            <td>{{ it.week }}</td>
+            <td>{{ it.day }}</td>
+            <td>{{ it.order }}</td>
+            <td>{{ it.teacher ? it.teacher : '未知'}}</td>
+            <td>{{ it.credit }}</td>
+            <td>{{ it.choose }}</td>
+            <td><button class="btn btn-sm primary" @click="choose(idx, $event)">选课</button></td>
+        </tr>
         </tbody>
     </table>
 </div>
 <script>
     var course = new Vue({
+        el: '#course',
+        data: {arr:null},
+        methods: {
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: '/u/c', type: 'GET',dataType:'json',
+                    success: function (res) {
+                        if (res.ok) _self.arr = res.obj;
+                        else Tip.show(res.msg);
+                    },
+                    error: function () {
+                        Tip.show();
+                    }
+                });
+            },
+            choose: function (arrId, event) {
+                var $e = $(event.currentTarget);
+                $e.addClass('loading');
+                $e.attr('disabled', 'disabled');
+                $.ajax({
+                    url: `/u/c/${this.arr[arrId].id}`, type: 'POST', dataType: 'json',
+                    success: function (res) {
 
+                        $e.removeClass('loading');
+                        $e.attr('disabled', null);
+
+                        if (res.ok) Tip.show('选课成功', true)
+                        else Tip.show(res.msg)
+                    },
+                    error: function () {
+                        $e.removeClass('loading');
+                        $e.attr('disabled', null);
+                        Tip.show()
+                    }
+                })
+            }
+        }
     });
+    course.loadData()
 </script>

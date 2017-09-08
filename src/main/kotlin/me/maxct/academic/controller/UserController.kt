@@ -6,6 +6,7 @@ import me.maxct.academic.entity.Profile
 import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
 import me.maxct.academic.repository.AcademyRepository
+import me.maxct.academic.repository.CourseRepository
 import me.maxct.academic.repository.MajorRepository
 import me.maxct.academic.repository.SemesterRepository
 import me.maxct.academic.service.UserService
@@ -29,7 +30,8 @@ class UserController {
     private lateinit var majorRepository: MajorRepository
     @Autowired
     private lateinit var academyRepository: AcademyRepository
-
+    @Autowired
+    private lateinit var courseRepository: CourseRepository
 
     //获取当前学期开设课程
     @GetMapping("/c")
@@ -55,8 +57,10 @@ class UserController {
 
     //选课
     @PostMapping("/c/{id}")
-    fun chooseCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
-        userService.chooseCourse(User(username = principal.name), Course(id = id))
+    fun chooseCourse(@PathVariable id: Long, principal: Principal): Msg<*> {
+        val course = courseRepository.findOne(id)
+        return userService.chooseCourse(User(username = principal.name), course)
+    }
 
     //退选
     @PostMapping("/d/{id}")

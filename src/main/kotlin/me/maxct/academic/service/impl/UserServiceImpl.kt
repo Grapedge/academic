@@ -6,6 +6,7 @@ import me.maxct.academic.entity.*
 import me.maxct.academic.exception.ServiceException
 import me.maxct.academic.repository.*
 import me.maxct.academic.service.UserService
+import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.stereotype.Service
@@ -53,7 +54,7 @@ class UserServiceImpl : UserService {
     override fun chooseCourse(user: User, course: Course): Msg<*> {
         val sid = SelectionId(course, user)
         if (selectionRepository.exists(sid))
-            return Msg.err("已经选过${course.courseName}了")
+            return Msg.err("已经选过这门课了")
         else {
             val list = selectionRepository.getSelectionBySemesterAndUser(
                 semesterRepository.getCurrentSemester(),
@@ -74,7 +75,7 @@ class UserServiceImpl : UserService {
             return if (!flag)
                 Msg.err("选课失败, 与 $name 上课时间冲突")
             else if (selectionRepository.save(Selection(sid)) != null
-                && courseRepository.decreaseCourseRemaining(course.id!!) == 1L)
+                && courseRepository.decreaseCourseRemaining(course.id!!) == 1)
                 Msg.ok("选课成功")
             else
                 throw ServiceException("选课失败,稍候再试")
@@ -85,8 +86,8 @@ class UserServiceImpl : UserService {
         val sid = SelectionId(course, user)
         return if (!selectionRepository.exists(sid))
             Msg.err("未选择此课程")
-        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1L
-            && selectionRepository.deleteById(sid) == 1L) {
+        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1
+            && selectionRepository.deleteById(sid) == 1) {
             Msg.ok("退选成功")
         } else throw ServiceException("退选失败,稍候再试")
     }
@@ -113,6 +114,23 @@ class UserServiceImpl : UserService {
 
     override fun getRecord(user: User): Msg<*> = Msg.ok("ok", recordRepository.getRecordByUser(user))
 
-    override fun getCourses(semester: Semester): Msg<*> =
-        Msg.ok("ok", courseRepository.getCourseBySemester(semester))
+    override fun getCourses(semester: Semester): Msg<*> {
+        val list = courseRepository.getCourseBySemester(semester)
+        val arr = ArrayList<Any>()
+        for (x in list) {
+            val e = NetMsg()
+            e.put("id", x!!.id)
+                .put("name", x.courseName)
+                .put("semester", x.semester!!.name)
+                .put("week", StringUtil.readWeek(x.week!!))
+                .put("day", x.day)
+                .put("order", x.courseOrder)
+                .put("teacher", x.teacher?.profile?.name)
+                .put("credit", x.credit)
+                .put("choose", "${x.remaining}/${x.total}")
+                .put("academy", x.academy!!.name)
+            arr.add(e.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 }

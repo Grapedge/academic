@@ -26,5 +26,5 @@ interface SelectionRepository : JpaRepository<Selection, SelectionId> {
     fun getSelectionByCourse(@Param("c") course: Course): List<Selection?>
 
     @Modifying
-    fun deleteById(id: SelectionId): Long
+    fun deleteById(id: SelectionId): Int
 }

@@ -20,11 +20,11 @@ interface CourseRepository : JpaRepository<Course, Long> {
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining > 0")
-    fun decreaseCourseRemaining(@Param("courseId") courseId: Long): Long
+    fun decreaseCourseRemaining(@Param("courseId") courseId: Long): Int
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Course c set c.remaining = c.remaining-1 where c.id=:courseId and c.remaining < c.total")
-    fun increaseCourseRemaining(@Param("courseId") courseId: Long): Long
+    fun increaseCourseRemaining(@Param("courseId") courseId: Long): Int
 
     fun deleteById(id: Long): Long
 
