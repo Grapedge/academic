@@ -1,9 +1,7 @@
 package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
-import me.maxct.academic.entity.Academy
-import me.maxct.academic.entity.Major
-import me.maxct.academic.entity.User
+import me.maxct.academic.entity.*
 import me.maxct.academic.service.SystemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -48,4 +46,22 @@ class SystemController {
     @GetMapping("/i/{id}")
     fun getUserInfo(@PathVariable id: String, principal: Principal): Msg<*> =
         systemService.getUserInfo(User(username = principal.name), id)
+
+    @PostMapping("/c")
+    fun createCourse(@RequestParam name: String, @RequestParam aid: Long, @RequestParam sid: Long,
+                     @RequestParam tid: String, @RequestParam credit: Double,
+                     @RequestParam week: String, @RequestParam total: Int, @RequestParam day: Int,
+                     @RequestParam courseOrder: Int,
+                     principal: Principal): Msg<*> {
+
+        val course = Course(
+            courseName = name, academy = Academy(id = aid), semester = Semester(id = sid),
+            teacher = User(username = tid), credit = credit, week = week, total = total, remaining = total,
+            day = day, courseOrder = courseOrder, flag = Integer.parseInt(week.reversed(), 2)
+        )
+
+        //TODO
+        //systemService.saveCourse()
+        return Msg.err("")
+    }
 }

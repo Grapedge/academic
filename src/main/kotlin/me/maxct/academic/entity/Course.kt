@@ -43,7 +43,8 @@ data class Course(
     val remaining: Int = 0,
 
     val courseOrder: Int = 1,
-    val day: Int = 1
+    val day: Int = 1,
+    val flag: Int = 0
 ) : Serializable {
     private constructor() : this(credit = 0.0)
 
