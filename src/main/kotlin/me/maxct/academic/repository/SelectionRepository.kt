@@ -24,4 +24,7 @@ interface SelectionRepository : JpaRepository<Selection, SelectionId> {
 
     @Query("from Selection s where s.id.course=:c")
     fun getSelectionByCourse(@Param("c") course: Course): List<Selection?>
+
+    @Modifying
+    fun deleteById(id: SelectionId): Long
 }

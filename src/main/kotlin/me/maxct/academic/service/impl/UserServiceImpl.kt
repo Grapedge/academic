@@ -26,6 +26,8 @@ class UserServiceImpl : UserService {
     private lateinit var recordRepository: RecordRepository
     @Autowired
     private lateinit var selectionRepository: SelectionRepository
+    @Autowired
+    private lateinit var semesterRepository: SemesterRepository
 
     override fun register(username: String, password: String): Msg<*> =
         if (userRepository.exists(username)) {
@@ -50,20 +52,41 @@ class UserServiceImpl : UserService {
 
     override fun chooseCourse(user: User, course: Course): Msg<*> {
         val sid = SelectionId(course, user)
-        return if (selectionRepository.exists(sid))
-            Msg.err("已经选过${course.courseName}了")
-        else if (selectionRepository.save(Selection(sid)) != null
-            && courseRepository.decreaseCourseRemaining(course.id!!) == 1L)
-            Msg.ok("选课成功")
-        else throw ServiceException("选课失败,稍候再试")
+        if (selectionRepository.exists(sid))
+            return Msg.err("已经选过${course.courseName}了")
+        else {
+            val list = selectionRepository.getSelectionBySemesterAndUser(
+                semesterRepository.getCurrentSemester(),
+                user
+            )
+            var flag = true
+            var name = ""
+            for (x in list) {
+                if (x?.id?.course?.day == course.day
+                    && x.id.course.courseOrder == course.courseOrder
+                    && x.id.course.flag.and(course.flag) != 0
+                    ) {
+                    flag = false
+                    name = x.id.course.courseName!!
+                    break
+                }
+            }
+            return if (!flag)
+                Msg.err("选课失败, 与 $name 上课时间冲突")
+            else if (selectionRepository.save(Selection(sid)) != null
+                && courseRepository.decreaseCourseRemaining(course.id!!) == 1L)
+                Msg.ok("选课成功")
+            else
+                throw ServiceException("选课失败,稍候再试")
+        }
     }
 
     override fun dropCourse(user: User, course: Course): Msg<*> {
         val sid = SelectionId(course, user)
         return if (!selectionRepository.exists(sid))
             Msg.err("未选择此课程")
-        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1L) {
-            selectionRepository.delete(sid)
+        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1L
+            && selectionRepository.deleteById(sid) == 1L) {
             Msg.ok("退选成功")
         } else throw ServiceException("退选失败,稍候再试")
     }

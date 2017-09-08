@@ -47,6 +47,7 @@ class SystemController {
     fun getUserInfo(@PathVariable id: String, principal: Principal): Msg<*> =
         systemService.getUserInfo(User(username = principal.name), id)
 
+    //创建课程
     @PostMapping("/c")
     fun createCourse(@RequestParam name: String, @RequestParam aid: Long, @RequestParam sid: Long,
                      @RequestParam tid: String, @RequestParam credit: Double,
@@ -59,9 +60,6 @@ class SystemController {
             teacher = User(username = tid), credit = credit, week = week, total = total, remaining = total,
             day = day, courseOrder = courseOrder, flag = Integer.parseInt(week.reversed(), 2)
         )
-
-        //TODO
-        //systemService.saveCourse()
-        return Msg.err("")
+        return systemService.saveCourse(User(username = principal.name), course)
     }
 }
