@@ -2,17 +2,8 @@
     <table class="table compact">
         <thead>
         <tr>
-            <th>课程ID</th>
-            <th>课程名</th>
-            <th>开设学院</th>
-            <th>学期</th>
-            <th>上课周次</th>
-            <th>上课星期</th>
-            <th>上课节次</th>
-            <th>教师</th>
-            <th>学分</th>
-            <th>选课情况</th>
-            <th>操作</th>
+            <th>课程ID</th><th>课程名</th><th>开设学院</th><th>学期</th><th>上课周次</th>
+            <th>上课星期</th><th>上课节次</th><th>教师</th><th>学分</th><th>选课情况</th><th>操作</th>
         </tr>
         </thead>
         <tbody id="course">
@@ -57,11 +48,9 @@
                 $.ajax({
                     url: `/u/c/${this.arr[arrId].id}`, type: 'POST', dataType: 'json',
                     success: function (res) {
-
                         $e.removeClass('loading');
                         $e.attr('disabled', null);
-
-                        if (res.ok) Tip.show('选课成功', true)
+                        if (res.ok) Tip.show('选课成功', true);
                         else Tip.show(res.msg)
                     },
                     error: function () {

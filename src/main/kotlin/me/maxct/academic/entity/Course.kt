@@ -37,14 +37,12 @@ data class Course(
 
     @Column(length = 24)
     val week: String? = null,
-
     val total: Int = 0,
-
     val remaining: Int = 0,
-
     val courseOrder: Int = 1,
     val day: Int = 1,
-    val flag: Int = 0
+    val flag: Int = 0,
+    val location: String? = null
 ) : Serializable {
     private constructor() : this(credit = 0.0)
 

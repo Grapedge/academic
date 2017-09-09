@@ -109,8 +109,20 @@ class UserServiceImpl : UserService {
         return Msg.ok("ok", arr)
     }
 
-    override fun getCourseSchedule(user: User, semester: Semester): Msg<*>
-        = Msg.ok("ok", selectionRepository.getSelectionBySemesterAndUser(semester, user))
+    override fun getCourseSchedule(user: User, semester: Semester): Msg<*> {
+        val list = selectionRepository.getSelectionBySemesterAndUser(semester, user)
+        val arr = ArrayList<Any>()
+        for (x in list) {
+            val res = NetMsg()
+            res.put("name", x!!.id!!.course?.courseName)
+                .put("teacher", x.id!!.course?.teacher?.profile?.name)
+                .put("location", x.id.course?.location)
+                .put("day", x.id.course?.day)
+                .put("order", x.id.course?.courseOrder)
+            arr.add(res.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 
     override fun getRecord(user: User): Msg<*> = Msg.ok("ok", recordRepository.getRecordByUser(user))
 

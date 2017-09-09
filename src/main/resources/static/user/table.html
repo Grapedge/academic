@@ -1,0 +1,56 @@
+    <div class="row" id="table">
+        <div class="column text-center">
+            <div class="cell"><div class="tile gray">&nbsp;</div></div>
+            <div class="cell"><div class="tile primary">一</div></div>
+            <div class="cell"><div class="tile primary">二</div></div>
+            <div class="cell"><div class="tile primary">三</div></div>
+            <div class="cell"><div class="tile primary">四</div></div>
+            <div class="cell"><div class="tile primary">五</div></div>
+        </div>
+    </div>
+<script>
+    const week = ['', '一', '二', '三', '四', '五', '六', '日'];
+    const randomStyle = ['green', 'red', 'yellow', 'blue', 'purple', 'brown'];
+    function initTable() {
+        var html = '';
+        for (var i = 1; i<=7; i++){
+            html += '<div class="column text-center">';
+            html += `<div class="cell"><div class="tile primary">${week[i]}</div></div>`;
+            for (var j=1; j<=5; j++){
+                html += `<div class="cell"><div class="tile gray" id="cell-${i}-${j}">&nbsp;</div></div>`
+            }
+            html += '</div>';
+        }
+        $('#table').append(html)
+    }
+
+    function showData(arr) {
+        for (var i in arr){
+            var x = arr[i];
+            var $el = $(`#cell-${x.day}-${x.order}`);
+            var text = `${x.name}@${x.location ? x.location : ''} ${x.teacher?x.teacher:''}`;
+            if ($el.text()){
+                $el.text($el.text() +  text)
+            }else {
+                $el.text(text)
+            }
+            var idx = parseInt(Math.random() * 1000) % randomStyle.length;
+            $el.removeClass('gray').addClass(randomStyle[idx]);
+        }
+    }
+
+    function loadData() {
+        $.ajax({
+            url: '/u/s', type: 'GET', dataType: 'json',
+            success: function (res) {
+                if (res.ok) showData(res.obj);
+                else Tip.show(res.msg)
+            },
+            error: function () {
+                Tip.show();
+            }
+        });
+    }
+    initTable();
+    loadData();
+</script>
