@@ -15,7 +15,6 @@ import org.springframework.stereotype.Repository
  * Created by imaxct on 17-8-30.
  */
 @Repository
-@CacheConfig(cacheNames = arrayOf("courses"))
 interface CourseRepository : JpaRepository<Course, Long> {
 
     @Modifying(clearAutomatically = true)
@@ -28,7 +27,6 @@ interface CourseRepository : JpaRepository<Course, Long> {
 
     fun deleteById(id: Long): Long
 
-    @Cacheable
     @Query("from Course c where c.semester = :s")
     fun getCourseBySemester(@Param("s") semester: Semester): List<Course?>
 

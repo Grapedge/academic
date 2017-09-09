@@ -74,7 +74,7 @@ class UserServiceImpl : UserService {
             }
             return if (!flag)
                 Msg.err("选课失败, 与 $name 上课时间冲突")
-            else if (selectionRepository.save(Selection(sid)) != null
+            else if (selectionRepository.saveAndFlush(Selection(sid)) != null
                 && courseRepository.decreaseCourseRemaining(course.id!!) == 1)
                 Msg.ok("选课成功")
             else
