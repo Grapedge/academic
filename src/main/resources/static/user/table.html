@@ -15,7 +15,7 @@
         var html = '';
         for (var i = 1; i<=7; i++){
             html += '<div class="column text-center">';
-            html += `<div class="cell"><div class="tile primary">${week[i]}</div></div>`;
+            html += `<div class="cell"><div class="tile primary">周${week[i]}</div></div>`;
             for (var j=1; j<=5; j++){
                 html += `<div class="cell"><div class="tile gray" id="cell-${i}-${j}">&nbsp;</div></div>`
             }
@@ -29,7 +29,7 @@
             var x = arr[i];
             var $el = $(`#cell-${x.day}-${x.order}`);
             var text = `${x.name}@${x.location ? x.location : ''} ${x.teacher?x.teacher:''}`;
-            if ($el.text()){
+            if ($el.text() && $el.text().length > 1){
                 $el.text($el.text() +  text)
             }else {
                 $el.text(text)

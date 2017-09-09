@@ -86,10 +86,15 @@ class UserServiceImpl : UserService {
         val sid = SelectionId(course, user)
         return if (!selectionRepository.exists(sid))
             Msg.err("未选择此课程")
-        else if (courseRepository.increaseCourseRemaining(course.id!!) == 1
-            && selectionRepository.deleteById(sid) == 1) {
-            Msg.ok("退选成功")
-        } else throw ServiceException("退选失败,稍候再试")
+        else {
+            val c = courseRepository.findOne(course.id) ?: throw ServiceException("课程不存在")
+            if (c.semester!!.id != semesterRepository.getCurrentSemester().id) {
+                return Msg.err("不能退选此课程")
+            } else if (courseRepository.increaseCourseRemaining(course.id!!) == 1
+                && selectionRepository.deleteById(sid) == 1) {
+                Msg.ok("退选成功")
+            } else throw ServiceException("退选失败,稍候再试")
+        }
     }
 
     override fun getChosenCourse(user: User): Msg<*> {
@@ -124,7 +129,17 @@ class UserServiceImpl : UserService {
         return Msg.ok("ok", arr)
     }
 
-    override fun getRecord(user: User): Msg<*> = Msg.ok("ok", recordRepository.getRecordByUser(user))
+    override fun getRecord(user: User): Msg<*> {
+        val list = recordRepository.getRecordByUser(user)
+        val arr = ArrayList<Any>()
+        for (x in list) {
+            val e = NetMsg()
+            e.put("timestamp", x!!.timestamp).put("reward", x.reward)
+                .put("detail", x.description)
+            arr.add(e.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 
     override fun getCourses(semester: Semester): Msg<*> {
         val list = courseRepository.getCourseBySemester(semester)

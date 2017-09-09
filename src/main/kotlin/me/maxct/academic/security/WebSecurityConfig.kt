@@ -29,7 +29,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/js/**", "/css/**", "/fonts/**", "/**/favicon.ico").permitAll()
             .antMatchers("/", "/index.html", "/user/**").hasRole("USER")
             .antMatchers("/admin.html", "/admin/**").hasRole("ADMIN")
-            .antMatchers("system.html", "/system/**").hasRole("SYSTEM")
+            .antMatchers("/system.html", "/system/**").hasRole("SYSTEM")
             .anyRequest().authenticated()
             .and()
             .formLogin()

@@ -1,0 +1,36 @@
+<div class="section" id="record">
+    <a class="item multi-lines" v-for="(x,idx) in arr">
+        <div class="content">
+            <div class="title">{{ x.timestamp }}</div>
+            <div class="subtitle">{{ x.detail }}</div>
+        </div>
+        <label class="label {{ x.reward? 'green' : 'red'}}">{{ x.reward? '奖励' : '处分'}}</label>
+    </a>
+</div>
+<script>
+    var record = new Vue({
+        el: '#record',
+        data: {arr: null},
+        methods: {
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: '/u/r', type: 'GET', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) {
+                            _self.arr = res.obj;
+                            if (!_self.arr || _self.arr.length < 1){
+                                Tip.show('无奖惩记录', true)
+                            }
+                        }
+                        else Tip.show(res.msg);
+                    },
+                    error: function () {
+                        Tip.show();
+                    }
+                });
+            }
+        }
+    });
+    record.loadData();
+</script>
