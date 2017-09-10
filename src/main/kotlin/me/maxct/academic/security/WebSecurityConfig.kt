@@ -26,7 +26,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/js/**", "/css/**", "/fonts/**", "/**/favicon.ico").permitAll()
+            .antMatchers("/ui/**", "/js/**", "/css/**", "/fonts/**", "/**/favicon.ico").permitAll()
             .antMatchers("/", "/index.html", "/user/**").hasRole("USER")
             .antMatchers("/admin.html", "/admin/**").hasRole("ADMIN")
             .antMatchers("/system.html", "/system/**").hasRole("SYSTEM")
