@@ -8,7 +8,28 @@
 </head>
 <body>
 <div class="ui container">
+    <div class="ui primary menu">
+        <a class="item active" data-tab="notice">公告</a>
+        <a class="item" data-tab="course">课程</a>
+        <a class="item" data-tab="record">奖惩</a>
+        <a class="right floated item" href="/logout">退出</a>
+    </div>
+    <div class="ui tab segment active" data-tab="notice">
+    </div>
+    <div class="ui tab segment" data-tab="course">
+    </div>
+    <div class="ui tab segment" data-tab="record">
+    </div>
 </div>
 <script src="js/jquery-3.2.1.min.js"></script>
+<script src="ui/semantic.min.js"></script>
+<script>
+    $('.menu .item').tab({
+        cache: false,
+        apiSettings: {
+            url: 'admin/{tab}.html'
+        }
+    });
+</script>
 </body>
 </html>
