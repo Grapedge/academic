@@ -1,3 +1,16 @@
-Notice<br>
-Notice<br>
-Notice
+<div class="ui message" id="notice">
+    <div class="header">公告</div>
+    <div id="message"></div>
+</div>
+<script>
+    $.ajax({
+        url: 'u/n', type: 'get', dataType: 'json',
+        success: function (res) {
+            if (res.ok) $('#message').html(res.obj.value);
+            else showTip(res.msg);
+        },
+        error: function () {
+            showTip('请求错误')
+        }
+    });
+</script>

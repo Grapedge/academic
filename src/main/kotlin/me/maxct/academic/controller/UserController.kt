@@ -5,11 +5,9 @@ import me.maxct.academic.entity.Course
 import me.maxct.academic.entity.Profile
 import me.maxct.academic.entity.Semester
 import me.maxct.academic.entity.User
-import me.maxct.academic.repository.AcademyRepository
-import me.maxct.academic.repository.CourseRepository
-import me.maxct.academic.repository.MajorRepository
-import me.maxct.academic.repository.SemesterRepository
+import me.maxct.academic.repository.*
 import me.maxct.academic.service.UserService
+import me.maxct.academic.util.AppConst
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -32,6 +30,8 @@ class UserController {
     private lateinit var academyRepository: AcademyRepository
     @Autowired
     private lateinit var courseRepository: CourseRepository
+    @Autowired
+    private lateinit var settingRepository: SettingRepository
 
     //获取当前学期开设课程
     @GetMapping("/c")
@@ -84,4 +84,8 @@ class UserController {
     @GetMapping("/m")
     fun getAllMajor(): Msg<*> =
         Msg.ok("ok", majorRepository.getAll())
+
+    @GetMapping("/n")
+    fun getNotice(): Msg<*> =
+        Msg.ok("ok", settingRepository.findOne(AppConst.CONFIG_NOTICE))
 }

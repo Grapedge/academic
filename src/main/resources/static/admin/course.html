@@ -1,0 +1,57 @@
+<div class="ui three column grid" id="course">
+    <table class="ui celled table">
+        <thead>
+        <tr>
+            <th>课序号</th>
+            <th>课程名</th>
+            <th>学分</th>
+            <th>开设学院</th>
+            <th>上课周次</th>
+            <th>上课时间</th>
+            <th>上课地点</th>
+            <th>选课人数</th>
+            <th>课程总量</th>
+            <th>选课详情&录入成绩</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(it,idx) in arr">
+            <td>{{ it.id }}</td>
+            <td>{{ it.name }}</td>
+            <td>{{ it.credit }}</td>
+            <td>{{ it.academy }}</td>
+            <td>{{ it.week }}</td>
+            <td>{{ it.time }}</td>
+            <td>{{ it.location }}</td>
+            <td>{{ it.number }}</td>
+            <td>{{ it.total }}</td>
+            <td><a href="#" @click="detail(it.id)">查看</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    var course = new Vue({
+        el: '#course',
+        data: { arr: null, data: null,  },
+        methods: {
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'a/c', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.arr = res.obj;
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('加载数据出错')
+                    }
+                });
+            },
+            detail: function (id) {
+                console.log(id)
+            }
+        }
+    });
+    course.loadData();
+</script>

@@ -1,11 +1,13 @@
 package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
+import me.maxct.academic.bean.NetMsg
 import me.maxct.academic.entity.*
 import me.maxct.academic.repository.CourseRepository
 import me.maxct.academic.repository.SelectionRepository
 import me.maxct.academic.service.AdminService
 import me.maxct.academic.service.UserService
+import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -29,10 +31,27 @@ class AdminController {
 
     //获取自己负责的课
     @GetMapping("/c")
-    fun getMyCourse(principal: Principal): Msg<*> =
-        Msg.ok("ok", courseRepository.getCourseByTeacher(
-            User(username = principal.name))
+    fun getMyCourse(principal: Principal): Msg<*> {
+        val list = courseRepository.getCourseByTeacher(
+            User(username = principal.name)
         )
+        val arr = ArrayList<Any>()
+        for (x in list) {
+            val o = NetMsg()
+            o.put("id", x!!.id)
+                .put("name", x.courseName)
+                .put("week", StringUtil.readWeek(x.week!!))
+            o.put("time", "周" + StringUtil.getWeekDayName(x.day) + "第${x.courseOrder}节")
+                .put("academy", x.academy!!.name)
+                .put("semester", x.semester?.name)
+                .put("number", x.total - x.remaining)
+                .put("total", x.total)
+                .put("location", x.location)
+                .put("credit", x.credit)
+            arr.add(o.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 
     //查看课的选课情况
     @GetMapping("/s/{id}")
@@ -50,7 +69,7 @@ class AdminController {
                 score = s
             )
         )
-    
+
     //添加一条奖惩记录
     @PostMapping("/r")
     fun createRecord(@RequestParam user: String, @RequestParam reward: Boolean, @RequestParam detail: String,

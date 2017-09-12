@@ -55,4 +55,8 @@ object StringUtil {
         }
         return "${res.substring(0, res.length - 1)}周"
     }
+
+    private val WEEK = arrayOf("零", "一", "二", "三", "四", "五", "六", "日")
+
+    fun getWeekDayName(x: Int): String = WEEK[x]
 }

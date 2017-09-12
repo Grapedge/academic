@@ -59,3 +59,10 @@ VALUES
   (-1, '201500301001', 2),
   (-1, '201500301002', 2);
 COMMIT ;
+
+BEGIN ;
+INSERT IGNORE INTO aca_setting (name, value)
+VALUES
+  ('notice', '新学期选课即将结束,请同学们尽快选课.<br>'),
+  ('selectOn', 'true');
+COMMIT ;
