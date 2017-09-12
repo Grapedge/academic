@@ -17,11 +17,14 @@ import org.springframework.stereotype.Component
 class ServiceLog {
     private val logger: Logger = LoggerFactory.getLogger(ServiceLog::class.java)
 
-    @Pointcut("within(me.maxct.academic.service..*)")
-    fun managerService() {
+    @Pointcut("within(me.maxct.academic.service.AdminService.*)")
+    fun adminService() {
     }
 
-    @Before("managerService() && args(operator,..)", argNames = "operator")
+    @Pointcut("within(me.maxct.academic.service.SystemService.*)")
+    fun systemService(){
+    }
+    @Before("adminService() && systemService() && args(operator,..)", argNames = "operator")
     fun beforeService(joinPoint: JoinPoint, operator: User){
         logger.info("${operator.username} -- ${joinPoint.signature.name}")
     }

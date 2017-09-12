@@ -1,5 +1,6 @@
 package me.maxct.academic.entity
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import java.io.Serializable
 import java.time.LocalDate
 import javax.persistence.*
@@ -32,6 +33,7 @@ data class Profile(
     @Column(length = 4)
     val gender: String = "未知",
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     val birthday: LocalDate? = null,
 
     @Column(length = 200)
