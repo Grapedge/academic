@@ -1,6 +1,5 @@
 package me.maxct.academic.entity
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import javax.persistence.*
 

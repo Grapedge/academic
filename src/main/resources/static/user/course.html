@@ -1,75 +1,88 @@
 <div id="course">
-    <div class="layer">
+    <div class="layer has-padding space">
         <div class="heading">
             <div class="title"><strong>已选课程</strong></div>
         </div>
         <div class="section">
-            <table class="table compact">
+            <table class="table compact bordered">
                 <thead>
                 <tr>
                     <th>课程ID</th>
                     <th>课程名</th>
-                    <th>开设学院</th>
-                    <th>学期</th>
                     <th>上课周次</th>
-                    <th>上课星期</th>
-                    <th>上课节次</th>
+                    <th>上课时间</th>
                     <th>教师</th>
                     <th>学分</th>
-                    <th>选课情况</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-    <div class="layer">
-        <div class="heading">
-            <div class="title"><strong>全部课程</strong></div>
-        </div>
-        <div class="section">
-            <table class="table compact">
-                <thead>
-                <tr>
-                    <th>课程ID</th>
-                    <th>课程名</th>
-                    <th>开设学院</th>
-                    <th>学期</th>
-                    <th>上课周次</th>
-                    <th>上课星期</th>
-                    <th>上课节次</th>
-                    <th>教师</th>
-                    <th>学分</th>
-                    <th>选课情况</th>
+                    <th>剩余/总量</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(it,idx) in arr">
+                <tr v-for="(it,idx) in ch">
                     <td>{{ it.id }}</td>
                     <td>{{ it.name }}</td>
-                    <td>{{ it.academy }}</td>
-                    <td>{{ it.semester }}</td>
                     <td>{{ it.week }}</td>
-                    <td>{{ it.day }}</td>
-                    <td>{{ it.order }}</td>
-                    <td>{{ it.teacher ? it.teacher : '未知'}}</td>
+                    <td>{{ it.time }}</td>
+                    <td>{{ it.teacher }}</td>
                     <td>{{ it.credit }}</td>
-                    <td>{{ it.choose }}</td>
-                    <td>
-                        <button class="btn btn-sm primary" @click="choose(idx, $event)">选课</button>
-                    </td>
+                    <td>{{ it.number }}</td>
+                    <td><a class="btn-sm danger" href="javascript:" @click="drop(idx, $event)">退选</a></td>
+                </tr>
+                <tr v-if="!ch">
+                    <td>还未选课</td>
                 </tr>
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="layer has-padding">
+        <div class="box">
+            <div class="heading">
+                <div class="title"><strong>全部课程</strong></div>
+            </div>
+            <div class="section">
+                <table class="table compact bordered">
+                    <thead>
+                    <tr>
+                        <th>课程ID</th>
+                        <th>课程名</th>
+                        <th>开设学院</th>
+                        <th>学期</th>
+                        <th>上课周次</th>
+                        <th>上课星期</th>
+                        <th>上课节次</th>
+                        <th>教师</th>
+                        <th>学分</th>
+                        <th>选课情况</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(it,idx) in arr">
+                        <td>{{ it.id }}</td>
+                        <td>{{ it.name }}</td>
+                        <td>{{ it.academy }}</td>
+                        <td>{{ it.semester }}</td>
+                        <td>{{ it.week }}</td>
+                        <td>{{ it.day }}</td>
+                        <td>{{ it.order }}</td>
+                        <td>{{ it.teacher ? it.teacher : '未知'}}</td>
+                        <td>{{ it.credit }}</td>
+                        <td>{{ it.choose }}</td>
+                        <td>
+                            <button class="btn btn-sm primary" @click="choose(idx, $event)">选课</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
 <script>
     var course = new Vue({
         el: '#course',
-        data: {arr: null},
+        data: {arr: null, ch: null},
         methods: {
             loadData: function () {
                 var _self = this;
@@ -80,7 +93,17 @@
                         else Tip.show(res.msg);
                     },
                     error: function () {
-                        Tip.show();
+                        Tip.show('加载数据失败');
+                    }
+                });
+                $.ajax({
+                    url: '/u/s', type: 'GET', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.ch = res.obj;
+                        else Tip.show(res.msg);
+                    },
+                    error: function () {
+                        Tip.show('加载数据失败');
                     }
                 });
             },
@@ -99,9 +122,32 @@
                     error: function () {
                         $e.removeClass('loading');
                         $e.attr('disabled', null);
-                        Tip.show()
+                        Tip.show('选课失败, 网络错误')
                     }
                 })
+            },
+            drop: function (id, event) {
+                var $e = $(e.currentTarget);
+                $e.addClass('loading');
+                $e.attr('disabled', 'disabled');
+                $.ajax({
+                    url: `/u/d/${this.ch[id].id}`, type: 'post', dataType: 'json',
+                    success: function (res) {
+                        $e.removeClass('loading');
+                        $e.attr('disabled', null);
+                        if (res.ok) {
+                            Tip.show('退选成功', true);
+                            this.ch.splice(id, 1);
+                        } else {
+                            Tip.show(res.msg);
+                        }
+                    },
+                    error: function () {
+                        $e.removeClass('loading');
+                        $e.attr('disabled', null);
+                        Tip.show('退选失败, 网络错误')
+                    }
+                });
             }
         }
     });

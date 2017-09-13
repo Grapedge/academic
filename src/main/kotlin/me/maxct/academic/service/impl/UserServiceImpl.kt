@@ -119,11 +119,16 @@ class UserServiceImpl : UserService {
         val arr = ArrayList<Any>()
         for (x in list) {
             val res = NetMsg()
-            res.put("name", x!!.id!!.course?.courseName)
-                .put("teacher", x.id!!.course?.teacher?.profile?.name)
+            res.put("id", x!!.id!!.course!!.id)
+                .put("name", x.id!!.course?.courseName)
+                .put("teacher", x.id.course?.teacher?.profile?.name)
                 .put("location", x.id.course?.location)
+                .put("credit", x.id.course?.credit)
                 .put("day", x.id.course?.day)
-                .put("order", x.id.course?.courseOrder)
+                .put("week", StringUtil.readWeek(x.id.course?.week!!))
+                .put("order", x.id.course.courseOrder)
+            val time = "周" + StringUtil.getWeekDayName(x.id.course.day) + "第${x.id.course.courseOrder}节"
+            res.put("time", time).put("number", "${x.id.course.remaining}/${x.id.course.total}")
             arr.add(res.list)
         }
         return Msg.ok("ok", arr)
