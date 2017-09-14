@@ -33,7 +33,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll()
+            .loginPage("/login").defaultSuccessUrl("/home").permitAll()
             .and()
             .logout().permitAll()
     }

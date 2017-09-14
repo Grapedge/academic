@@ -126,24 +126,6 @@
                     }
                 })
             },
-            dropQ: function () {
-                var el = new $.Display({
-                    display: 'modal',
-                    contentType: 'html',
-                    content: '<div class="modal">\n' +
-                    '    <div class="heading">\n' +
-                    '        <div class="title"><strong>提示</strong></div>\n' +
-                    '        <nav class="nav"><a data-dismiss="display"><i class="icon-remove muted"></i></a></nav>\n' +
-                    '    </div>\n' +
-                    '    <div class="content article box">\n' +
-                    '        <p>确认?</p>\n' +
-                    '    </div>\n' +
-                    '    <nav class="nav"><div class="btn default has-margin">取消</div> <div class="btn primary has-margin">确认</div> </nav>\n' +
-                    '</div>'
-                });
-                el.show();
-            },
-            //TODO alert
             drop: function (id, event) {
                 var $e = $(event.currentTarget);
                 $e.addClass('loading');
