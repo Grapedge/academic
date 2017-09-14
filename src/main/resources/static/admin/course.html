@@ -27,6 +27,9 @@
             <td>{{ it.total }}</td>
             <td><a href="javascript:" @click="detail(it.id)">查看</a></td>
         </tr>
+        <tr v-if="!arr">
+            <td>尚未任教任何课程</td>
+        </tr>
         </tbody>
     </table>
 </div>
