@@ -34,10 +34,10 @@ class UserController {
     private lateinit var settingRepository: SettingRepository
 
     //获取当前学期开设课程
-    @GetMapping("/c")
-    fun getCourses(): Msg<*> {
+    @GetMapping("/c/{id}")
+    fun getCourses(@PathVariable id: Int): Msg<*> {
         val semester: Semester = semesterRepository.getCurrentSemester()
-        return userService.getCourses(semester)
+        return userService.getCourses(semester, id)
     }
 
     //获取所有已选课程
@@ -85,6 +85,7 @@ class UserController {
     fun getAllMajor(): Msg<*> =
         Msg.ok("ok", majorRepository.getAll())
 
+    //获取公告
     @GetMapping("/n")
     fun getNotice(): Msg<*> =
         Msg.ok("ok", settingRepository.findOne(AppConst.CONFIG_NOTICE))

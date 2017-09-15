@@ -28,7 +28,7 @@
                     <td>{{ it.number }}</td>
                     <td><a class="btn-sm danger" href="javascript:" @click="drop(idx, $event)">退选</a></td>
                 </tr>
-                <tr v-if="!ch">
+                <tr v-if="!ch || ch.length == 0">
                     <td>还未选课</td>
                 </tr>
                 </tbody>
@@ -58,7 +58,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(it,idx) in arr">
+                    <tr v-for="(it,idx) in arr.content">
                         <td>{{ it.id }}</td>
                         <td>{{ it.name }}</td>
                         <td>{{ it.academy }}</td>
@@ -73,6 +73,7 @@
                             <button class="btn btn-sm primary" @click="choose(idx, $event)">选课</button>
                         </td>
                     </tr>
+                    <tr v-if="!arr || !arr.content || arr.content.length == 0"><td>暂无数据</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -82,12 +83,12 @@
 <script>
     var course = new Vue({
         el: '#course',
-        data: {arr: null, ch: null},
+        data: {arr: {content: null}, ch: null, curPage: 0},
         methods: {
             loadData: function () {
                 var _self = this;
                 $.ajax({
-                    url: '/u/c', type: 'GET', dataType: 'json',
+                    url: `/u/c/${this.curPage}`, type: 'GET', dataType: 'json',
                     success: function (res) {
                         if (res.ok) _self.arr = res.obj;
                         else Tip.show(res.msg);
@@ -108,11 +109,12 @@
                 });
             },
             choose: function (arrId, event) {
+                var _self = this;
                 var $e = $(event.currentTarget);
                 $e.addClass('loading');
                 $e.attr('disabled', 'disabled');
                 $.ajax({
-                    url: `/u/c/${this.arr[arrId].id}`, type: 'POST', dataType: 'json',
+                    url: `/u/c/${_self.arr.content[arrId].id}`, type: 'POST', dataType: 'json',
                     success: function (res) {
                         $e.removeClass('loading');
                         $e.attr('disabled', null);
@@ -127,17 +129,18 @@
                 })
             },
             drop: function (id, event) {
+                var _self = this;
                 var $e = $(event.currentTarget);
                 $e.addClass('loading');
                 $e.attr('disabled', 'disabled');
                 $.ajax({
-                    url: `/u/d/${this.ch[id].id}`, type: 'post', dataType: 'json',
+                    url: `/u/d/${_self.ch[id].id}`, type: 'post', dataType: 'json',
                     success: function (res) {
                         $e.removeClass('loading');
                         $e.attr('disabled', null);
                         if (res.ok) {
                             Tip.show('退选成功', true);
-                            this.ch.splice(id, 1);
+                            _self.ch.splice(id, 1);
                         } else {
                             Tip.show(res.msg);
                         }

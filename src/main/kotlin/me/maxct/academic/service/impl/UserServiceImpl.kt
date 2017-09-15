@@ -8,7 +8,7 @@ import me.maxct.academic.repository.*
 import me.maxct.academic.service.UserService
 import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Example
+import org.springframework.data.domain.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -64,11 +64,11 @@ class UserServiceImpl : UserService {
             var name = ""
             for (x in list) {
                 if (x?.id?.course?.day == course.day
-                    && x.id.course.courseOrder == course.courseOrder
-                    && x.id.course.flag.and(course.flag) != 0
+                    && x?.id?.course?.courseOrder == course.courseOrder
+                    && x?.id?.course?.flag?.and(course.flag!!) != 0
                     ) {
                     flag = false
-                    name = x.id.course.courseName!!
+                    name = x?.id?.course?.courseName!!
                     break
                 }
             }
@@ -127,7 +127,7 @@ class UserServiceImpl : UserService {
                 .put("day", x.id.course?.day)
                 .put("week", StringUtil.readWeek(x.id.course?.week!!))
                 .put("order", x.id.course.courseOrder)
-            val time = "周" + StringUtil.getWeekDayName(x.id.course.day) + "第${x.id.course.courseOrder}节"
+            val time = "周" + StringUtil.getWeekDayName(x.id.course.day!!) + "第${x.id.course.courseOrder}节"
             res.put("time", time).put("number", "${x.id.course.remaining}/${x.id.course.total}")
             arr.add(res.list)
         }
@@ -146,23 +146,30 @@ class UserServiceImpl : UserService {
         return Msg.ok("ok", arr)
     }
 
-    override fun getCourses(semester: Semester): Msg<*> {
-        val list = courseRepository.getCourseBySemester(semester)
-        val arr = ArrayList<Any>()
-        for (x in list) {
-            val e = NetMsg()
-            e.put("id", x!!.id)
-                .put("name", x.courseName)
-                .put("semester", x.semester!!.name)
-                .put("week", StringUtil.readWeek(x.week!!))
-                .put("day", x.day)
-                .put("order", x.courseOrder)
-                .put("teacher", x.teacher?.profile?.name)
-                .put("credit", x.credit)
-                .put("choose", "${x.remaining}/${x.total}")
-                .put("academy", x.academy!!.name)
-            arr.add(e.list)
+    override fun getCourses(semester: Semester, page: Int): Msg<*> {
+        /*val list = courseRepository.getCourseBySemester(semester)*/
+        val pageable = PageRequest(page, 20, Sort(Sort.Direction.DESC, "id"))
+        val list = courseRepository.getCourseBySemester(semester, pageable)
+        println(list.content.size)
+        for ((id) in list.content){
+            println(id)
         }
-        return Msg.ok("ok", arr)
+        val pageDTO = list.map(this::convertToDTO)
+        return Msg.ok("ok", pageDTO)
+    }
+
+    fun convertToDTO(x: Course?): MutableMap<String, Any?> {
+        val e = NetMsg()
+        e.put("id", x!!.id)
+            .put("name", x.courseName)
+            .put("semester", x.semester!!.name)
+            .put("week", StringUtil.readWeek(x.week!!))
+            .put("day", x.day)
+            .put("order", x.courseOrder)
+            .put("teacher", x.teacher?.profile?.name)
+            .put("credit", x.credit)
+            .put("choose", "${x.remaining}/${x.total}")
+            .put("academy", x.academy!!.name)
+        return e.list
     }
 }

@@ -70,5 +70,5 @@ interface UserService {
     /**
      * 获取本学期开设课程
      */
-    fun getCourses(semester: Semester): Msg<*>
+    fun getCourses(semester: Semester, page: Int): Msg<*>
 }

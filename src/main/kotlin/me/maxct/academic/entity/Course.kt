@@ -33,18 +33,18 @@ data class Course(
     @JoinColumn
     val teacher: User? = null,
 
-    val credit: Double = 0.0,
+    val credit: Double? = null,
 
     @Column(length = 24)
     val week: String? = null,
-    val total: Int = 0,
-    val remaining: Int = 0,
-    val courseOrder: Int = 1,
-    val day: Int = 1,
-    val flag: Int = 0,
+    val total: Int? = null,
+    val remaining: Int? = null,
+    val courseOrder: Int? = null,
+    val day: Int? = null,
+    val flag: Int? = null,
     val location: String? = null
 ) : Serializable {
-    private constructor() : this(credit = 0.0)
+    private constructor() : this(credit = null)
 
     /*override fun equals(other: Any?): Boolean {
         return this.hashCode() == other?.hashCode()
