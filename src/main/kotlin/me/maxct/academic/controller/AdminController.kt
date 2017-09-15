@@ -4,6 +4,7 @@ import me.maxct.academic.bean.Msg
 import me.maxct.academic.bean.NetMsg
 import me.maxct.academic.entity.*
 import me.maxct.academic.repository.CourseRepository
+import me.maxct.academic.repository.RecordRepository
 import me.maxct.academic.repository.SelectionRepository
 import me.maxct.academic.service.AdminService
 import me.maxct.academic.service.UserService
@@ -28,6 +29,8 @@ class AdminController {
     private lateinit var courseRepository: CourseRepository
     @Autowired
     private lateinit var selectionRepository: SelectionRepository
+    @Autowired
+    private lateinit var recordRepository: RecordRepository
 
     //获取自己负责的课
     @GetMapping("/c")
@@ -89,4 +92,33 @@ class AdminController {
     fun deleteRecord(@PathVariable id: Long, principal: Principal): Msg<*> =
         adminService.deleteRecord(User(username = principal.name), Record(id = id))
 
+    //查询学生信息
+    @PostMapping("/i")
+    fun getInfo(@RequestParam stuNo: String): Msg<*> {
+        val user = userService.getInfo(stuNo) ?: return Msg.err("用户不存在")
+        val msg = NetMsg()
+        msg.put("name", user.profile?.name)
+            .put("stuNo", user.username)
+            .put("academy", user.profile?.major?.academy?.name)
+            .put("major", user.profile?.major?.name)
+            .put("unit", user.profile?.unit)
+        return Msg.ok("ok", msg.list)
+    }
+
+    @GetMapping("/r")
+    fun getMyRecord(principal: Principal): Msg<*> {
+        val list = recordRepository.getRecordByPerformer(User(username = principal.name))
+        val arr = ArrayList<Any>()
+        for (x in list){
+            val o = NetMsg()
+            o.put("id", x.id)
+                .put("stuNo", x.user?.username)
+                .put("name", x.user?.profile?.name)
+                .put("reward", x.reward)
+                .put("detail", x.description)
+                .put("date", x.timestamp)
+            arr.add(o.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 }

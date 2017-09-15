@@ -1,0 +1,54 @@
+<div class="ui grid" id="info">
+    <div class="column">
+        <div class="ui action left icon input">
+            <i class="search icon"></i>
+            <input type="text" placeholder="输入学号查询" v-model="stuNo">
+            <div class="ui teal button" @click="search()">查询</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+        </div>
+    </div>
+    <div class="row">
+        <table class="ui table">
+            <thead>
+            <tr>
+                <td>记录ID</td>
+                <td>学生学号</td>
+                <td>学生姓名</td>
+                <td>类型</td>
+                <td>日期</td>
+                <td>奖惩原因</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(it,idx) in arr"></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    var info = new Vue({
+        el: '#info',
+        data: {info: null, stuNo: null, arr: null},
+        methods: {
+            search: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'a/i', type: 'post', dataType: 'json', data: {stuNo: _self.stuNo},
+                    success: function (res) {
+                        if (res.ok) _self.info = res.obj;
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('载入数据出错, 请检查网络连接')
+                    }
+                });
+            },
+            loadData: function () {
+                //TODO
+            }
+        }
+    });
+</script>

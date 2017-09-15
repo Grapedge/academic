@@ -14,9 +14,9 @@ data class Msg<out T>(
 ) : Serializable {
     companion object {
         fun ok(msg: String) = Msg(ok = true, msg = msg, obj = null)
-        fun ok(msg: String, obj: Any) = Msg(ok = true, msg = msg, obj = obj)
+        fun ok(msg: String, obj: Any?) = Msg(ok = true, msg = msg, obj = obj)
         fun err(msg: String) = Msg(msg = msg, obj = null)
-        fun err(msg: String, obj: Any) = Msg(msg = msg, obj = obj)
+        fun err(msg: String, obj: Any?) = Msg(msg = msg, obj = obj)
     }
 
     override fun toString(): String = StringUtil.toJson(this)

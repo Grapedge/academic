@@ -51,7 +51,7 @@ INSERT IGNORE INTO `aca_course` (id, course_name, credit, remaining, total, week
 COMMIT;
 
 BEGIN ;
-INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301001', 1);
+-- INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301001', 1);
 INSERT IGNORE INTO academic.aca_selection (score, user_username, course_id) VALUES (-1, '201500301002', 1);
 INSERT IGNORE INTO academic.aca_selection
 (score, user_username, course_id)

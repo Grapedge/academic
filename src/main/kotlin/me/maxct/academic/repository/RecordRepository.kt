@@ -12,4 +12,5 @@ import org.springframework.stereotype.Repository
 interface RecordRepository : JpaRepository<Record, Long> {
     fun getRecordByUser(user: User): List<Record?>
     fun deleteById(id: Long): Int
+    fun getRecordByPerformer(performer: User) :List<Record>
 }

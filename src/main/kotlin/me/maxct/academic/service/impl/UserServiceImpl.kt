@@ -150,10 +150,6 @@ class UserServiceImpl : UserService {
         /*val list = courseRepository.getCourseBySemester(semester)*/
         val pageable = PageRequest(page, 20, Sort(Sort.Direction.DESC, "id"))
         val list = courseRepository.getCourseBySemester(semester, pageable)
-        println(list.content.size)
-        for ((id) in list.content){
-            println(id)
-        }
         val pageDTO = list.map(this::convertToDTO)
         return Msg.ok("ok", pageDTO)
     }

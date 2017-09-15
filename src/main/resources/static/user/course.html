@@ -39,6 +39,9 @@
         <div class="box">
             <div class="heading">
                 <div class="title"><strong>全部课程</strong></div>
+                <button class="btn icon-chevron-left" :class="leftBtn" @click="page(-1, $event)"></button>
+                {{ arr.number + 1 }}
+                <button class="btn icon-chevron-right" :class="rightBtn" @click="page(1, $event)"></button>
             </div>
             <div class="section">
                 <table class="table compact bordered">
@@ -73,7 +76,9 @@
                             <button class="btn btn-sm primary" @click="choose(idx, $event)">选课</button>
                         </td>
                     </tr>
-                    <tr v-if="!arr || !arr.content || arr.content.length == 0"><td>暂无数据</td></tr>
+                    <tr v-if="!arr || !arr.content || arr.content.length == 0">
+                        <td>暂无数据</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -83,12 +88,20 @@
 <script>
     var course = new Vue({
         el: '#course',
-        data: {arr: {content: null}, ch: null, curPage: 0},
+        data: {arr: {content: null, first: true, last: true, number: 0, totalPages: 0}, ch: null},
         methods: {
+            loading: function (e) {
+                e.addClass('loading');
+                e.attr('disabled', 'disabled');
+            },
+            deLoading: function (e) {
+                e.removeClass('loading');
+                e.attr('disabled', null);
+            },
             loadData: function () {
                 var _self = this;
                 $.ajax({
-                    url: `/u/c/${this.curPage}`, type: 'GET', dataType: 'json',
+                    url: `/u/c/${this.arr.number}`, type: 'GET', dataType: 'json',
                     success: function (res) {
                         if (res.ok) _self.arr = res.obj;
                         else Tip.show(res.msg);
@@ -108,22 +121,44 @@
                     }
                 });
             },
+            page: function (offset, event) {
+                var _self = this;
+                if (_self.arr.first || _self.arr.last) return;
+                if (_self.arr.number + offset >= _self.arr.totalPages || _self.arr.number + offset < 0) return;
+
+                var $e = $(event.currentTarget);
+                _self.loading($e);
+                _self.arr.number += offset;
+                $.ajax({
+                    url: `/u/c/${_self.arr.number}`, type: 'get', dataType: 'json',
+                    success: function (res) {
+                        _self.deLoading($e);
+                        if (res.ok) this.arr = res.obj;
+                        else {
+                            _self.arr.number -= offset;
+                            Tip.show(res.msg)
+                        }
+                    },
+                    error: function () {
+                        _self.arr.number -= offset;
+                        _self.deLoading($e);
+                        Tip.show('请求数据失败')
+                    }
+                });
+            },
             choose: function (arrId, event) {
                 var _self = this;
                 var $e = $(event.currentTarget);
-                $e.addClass('loading');
-                $e.attr('disabled', 'disabled');
+                _self.loading($e);
                 $.ajax({
                     url: `/u/c/${_self.arr.content[arrId].id}`, type: 'POST', dataType: 'json',
                     success: function (res) {
-                        $e.removeClass('loading');
-                        $e.attr('disabled', null);
+                        _self.deLoading($e);
                         if (res.ok) Tip.show('选课成功', true);
                         else Tip.show(res.msg)
                     },
                     error: function () {
-                        $e.removeClass('loading');
-                        $e.attr('disabled', null);
+                        _self.deLoading($e);
                         Tip.show('选课失败, 网络错误')
                     }
                 })
@@ -131,13 +166,11 @@
             drop: function (id, event) {
                 var _self = this;
                 var $e = $(event.currentTarget);
-                $e.addClass('loading');
-                $e.attr('disabled', 'disabled');
+                _self.loading($e);
                 $.ajax({
                     url: `/u/d/${_self.ch[id].id}`, type: 'post', dataType: 'json',
                     success: function (res) {
-                        $e.removeClass('loading');
-                        $e.attr('disabled', null);
+                        _self.deLoading($e);
                         if (res.ok) {
                             Tip.show('退选成功', true);
                             _self.ch.splice(id, 1);
@@ -146,11 +179,22 @@
                         }
                     },
                     error: function () {
-                        $e.removeClass('loading');
-                        $e.attr('disabled', null);
+                        _self.deLoading($e);
                         Tip.show('退选失败, 网络错误')
                     }
                 });
+            }
+        },
+        computed: {
+            leftBtn: function () {
+                return {
+                    disabled: this.arr.first,
+                }
+            },
+            rightBtn: function () {
+                return {
+                    disabled: this.arr.last,
+                }
             }
         }
     });
