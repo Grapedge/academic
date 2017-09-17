@@ -10,6 +10,7 @@ import me.maxct.academic.service.AdminService
 import me.maxct.academic.service.UserService
 import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
@@ -58,8 +59,21 @@ class AdminController {
 
     //查看课的选课情况
     @GetMapping("/s/{id}")
-    fun getSelection(@PathVariable id: Long, principal: Principal): Msg<*> =
-        Msg.ok("ok", selectionRepository.getSelectionByCourse(Course(id = id)))
+    fun getSelection(@PathVariable id: Long, principal: Principal): Msg<*> {
+        val list = selectionRepository.getSelectionByCourse(Course(id = id))
+        val arr = ArrayList<Any>()
+        for ((idx) in list){
+            val o = NetMsg()
+            o.put("stuNo", idx?.user?.username)
+                .put("name", idx?.user?.profile?.name)
+                .put("gender", idx?.user?.profile?.gender)
+                .put("academy", idx?.user?.profile?.major?.academy?.name)
+                .put("major", idx?.user?.profile?.major?.name)
+                .put("unit", idx?.user?.profile?.unit)
+            arr.add(o.list)
+        }
+        return Msg.ok("ok", arr)
+    }
 
     //录入成绩
     @PostMapping("/s/{cid}")
@@ -75,11 +89,11 @@ class AdminController {
 
     //添加一条奖惩记录
     @PostMapping("/r")
-    fun createRecord(@RequestParam user: String, @RequestParam reward: Boolean, @RequestParam detail: String,
+    fun createRecord(@RequestParam stuNo: String, @RequestParam reward: Boolean, @RequestParam detail: String,
                      principal: Principal): Msg<*> {
         val op = User(username = principal.name)
         val record = Record(
-            user = User(username = user),
+            user = User(username = stuNo),
             performer = op,
             reward = reward,
             description = detail
@@ -105,9 +119,13 @@ class AdminController {
         return Msg.ok("ok", msg.list)
     }
 
+    //获取自己操作的奖惩记录
     @GetMapping("/r")
     fun getMyRecord(principal: Principal): Msg<*> {
-        val list = recordRepository.getRecordByPerformer(User(username = principal.name))
+        val list = recordRepository.getRecordByPerformer(
+            User(username = principal.name),
+            Sort(Sort.Direction.DESC, "id")
+        )
         val arr = ArrayList<Any>()
         for (x in list){
             val o = NetMsg()

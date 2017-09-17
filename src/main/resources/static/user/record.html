@@ -1,11 +1,15 @@
 <div class="section" id="record">
-    <a class="item multi-lines" v-for="(x,idx) in arr">
-        <div class="content">
-            <div class="title">{{ x.timestamp }}</div>
-            <div class="subtitle">{{ x.detail }}</div>
-        </div>
-        <label class="label {{ x.reward? 'green' : 'red'}}">{{ x.reward? '奖励' : '处分'}}</label>
-    </a>
+    <div class="list">
+        <a class="item multi-lines" v-for="(x,idx) in arr">
+            <div class="content">
+                <div class="title">{{ x.timestamp }}</div>
+                <div class="article">
+                    <blockquote>{{ x.detail }}</blockquote>
+                </div>
+            </div>
+            <label class="label" :class="x.reward? 'green' : 'red'">{{ x.reward? '奖励' : '处分'}}</label>
+        </a>
+    </div>
 </div>
 <script>
     var record = new Vue({
@@ -19,7 +23,7 @@
                     success: function (res) {
                         if (res.ok) {
                             _self.arr = res.obj;
-                            if (!_self.arr || _self.arr.length < 1){
+                            if (!_self.arr || _self.arr.length < 1) {
                                 Tip.show('无奖惩记录', true)
                             }
                         }

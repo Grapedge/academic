@@ -6,24 +6,97 @@
             <div class="ui teal button" @click="search()">查询</div>
         </div>
     </div>
-    <div class="row">
-        <div class="column">
+    <div class="ui two column row">
+        <div class="ui four wide column">
+            <table class="ui collapsing celled table" v-if="info">
+                <thead>
+                <tr>
+                    <th>属性</th>
+                    <th>值</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>姓名</td>
+                    <td>{{ info.name }}</td>
+                </tr>
+                <tr>
+                    <td>学号</td>
+                    <td>{{ info.stuNo }}</td>
+                </tr>
+                <tr>
+                    <td>学院</td>
+                    <td>{{ info.academy }}</td>
+                </tr>
+                <tr>
+                    <td>专业</td>
+                    <td>{{ info.major }}</td>
+                </tr>
+                <tr>
+                    <td>班级</td>
+                    <td>{{ info.unit }}</td>
+                </tr>
+                <tr>
+                    <td>操作</td>
+                    <td>
+                        <a class="ui red button" href="javascript:" @click="showTable()">添加记录</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="ui twelve wide column" v-if="see">
+            <div class="ui form">
+                <div class="field">
+                    <label>学号</label>
+                    <input type="text" name="stuNo"  v-model="record.stuNo" readonly="">
+                </div>
+                <div class="field">
+                    <label>类型</label>
+                    <select name="reward"   v-model="record.reward">
+                        <option value="true">奖励</option>
+                        <option value="false">处分</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>原因</label>
+                    <textarea name="detail"   v-model="record.detail"></textarea>
+                </div>
+                <div class="ui submit button" @click="addRecord()">提交</div>
+            </div>
         </div>
     </div>
     <div class="row">
-        <table class="ui table">
+        <div class="ui top attached segment">
+            <h3 class="ui center aligned header">
+                我添加的记录
+            </h3>
+        </div>
+        <table class="ui attached celled table">
             <thead>
             <tr>
-                <td>记录ID</td>
-                <td>学生学号</td>
-                <td>学生姓名</td>
-                <td>类型</td>
-                <td>日期</td>
-                <td>奖惩原因</td>
+                <th>记录ID</th>
+                <th>学生学号</th>
+                <th>学生姓名</th>
+                <th>类型</th>
+                <th>日期</th>
+                <th>奖惩原因</th>
+                <th>删除</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(it,idx) in arr"></tr>
+            <tr v-for="(it,idx) in arr">
+                <td>{{ it.id }}</td>
+                <td>{{ it.stuNo }}</td>
+                <td>{{ it.name }}</td>
+                <td>{{ it.reward ? '奖励' : '处分' }}</td>
+                <td>{{ it.date }}</td>
+                <td>{{ it.detail }}</td>
+                <td><a href="javascript:" class="btn danger" @click="del(idx, $event)">删除</a></td>
+            </tr>
+            <tr v-if="!arr || arr.length == 0">
+                <td>没有记录</td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -31,7 +104,7 @@
 <script>
     var info = new Vue({
         el: '#info',
-        data: {info: null, stuNo: null, arr: null},
+        data: {info: null, stuNo: null, arr: null, record: {stuNo: null, reward: true, detail: null}, see: false},
         methods: {
             search: function () {
                 var _self = this;
@@ -47,8 +120,62 @@
                 });
             },
             loadData: function () {
-                //TODO
+                var _self = this;
+                $.ajax({
+                    url: 'a/r', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.arr = res.obj;
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('网络错误, 加载数据失败')
+                    }
+                });
+            },
+            del: function (id, event) {
+                var _self = this;
+                var $e = $(event.currentTarget);
+                $e.attr('disabled', 'disabled');
+                $.ajax({
+                    url: `r/d/${_self.arr[id].id}`, type: 'delete', dataType: 'json',
+                    success: function (res) {
+                        $e.attr('disabled', null);
+                        if (res.ok) {
+                            showTip('删除成功');
+                            _self.arr.splice(id, 1);
+                        } else {
+                            showTip(res.msg);
+                        }
+                    },
+                    error: function () {
+                        $e.attr('disabled', null);
+                        showTip('网络错误, 请检查网络连接')
+                    }
+                });
+            },
+            addRecord: function () {
+                var _self = this;
+                $('.ui.form').attr('class', 'ui loading form');
+                $.ajax({
+                    url: 'a/r', data: _self.record, type: 'post', dataType: 'json',
+                    success: function (res) {
+                        $('.ui.form').attr('class', 'ui form');
+                        if (res.ok) showTip('添加成功');
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        $('.ui.form').attr('class', 'ui form');
+                        showTip('网络错误, 请检查网络连接')
+                    }
+                });
+            },
+            showTable: function () {
+                var _self = this;
+                _self.see = !_self.see;
+                _self.record.stuNo = _self.info.stuNo;
+                $('.ui.radio.checkbox').checkbox();
             }
         }
     });
+    info.loadData();
 </script>

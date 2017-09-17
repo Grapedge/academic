@@ -34,9 +34,10 @@
     </table>
 </div>
 <script>
+    var form_data = [];
     var course = new Vue({
         el: '#course',
-        data: { arr: null, data: null,  },
+        data: {arr: null, data: null,},
         methods: {
             loadData: function () {
                 var _self = this;

@@ -135,7 +135,7 @@ class UserServiceImpl : UserService {
     }
 
     override fun getRecord(user: User): Msg<*> {
-        val list = recordRepository.getRecordByUser(user)
+        val list = recordRepository.getRecordByUser(user, Sort(Sort.Direction.DESC, "id"))
         val arr = ArrayList<Any>()
         for (x in list) {
             val e = NetMsg()

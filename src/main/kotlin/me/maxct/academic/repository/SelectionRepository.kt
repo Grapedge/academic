@@ -13,17 +13,17 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SelectionRepository : JpaRepository<Selection, SelectionId> {
     @Query("from Selection where id.user=:user")
-    fun getSelectionByUser(@Param("user") user: User): List<Selection?>
+    fun getSelectionByUser(@Param("user") user: User): List<Selection>
 
     @Query("from Selection where id.user=:user and id.course.semester=:semester")
-    fun getSelectionBySemesterAndUser(@Param("semester") semester: Semester, @Param("user") user: User): List<Selection?>
+    fun getSelectionBySemesterAndUser(@Param("semester") semester: Semester, @Param("user") user: User): List<Selection>
 
     @Modifying(clearAutomatically = true)
     @Query("update Selection s set s.score=:score where s.id=:id and s.score<0")
     fun updateSelectionScore(@Param("id") id: SelectionId, @Param("score") score: Double): Int
 
     @Query("from Selection s where s.id.course=:c")
-    fun getSelectionByCourse(@Param("c") course: Course): List<Selection?>
+    fun getSelectionByCourse(@Param("c") course: Course): List<Selection>
 
     @Modifying
     fun deleteById(id: SelectionId): Int
