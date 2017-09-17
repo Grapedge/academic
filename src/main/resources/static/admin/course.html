@@ -33,6 +33,15 @@
         </tbody>
     </table>
 </div>
+<div class="ui longer modal transition hidden">
+    <div class="header">选课详情</div>
+    <div class="scrolling content">
+        <div id="table"></div>
+    </div>
+    <div class="actions">
+        <div class="ui primary button" onclick="exportTable()">导出</div>
+    </div>
+</div>
 <script>
     var form_data = [];
     var course = new Vue({
@@ -53,9 +62,44 @@
                 });
             },
             detail: function (id) {
-                console.log(id)
+                loadDetail(id);
             }
         }
     });
     course.loadData();
+    var container = document.querySelector('#table');
+    var table = new Handsontable(container, {
+        data: form_data,
+        rowHeaders: true
+    });
+
+    function parseData(arr) {
+        var res = [];
+        res[0] = ['姓名', '性别', '学号', '班级', '专业', '学院'];
+        for (var i = 0; i < arr.length; i++) {
+            res[i + 1] = [arr[i].name, arr[i].gender, arr[i].stuNo, arr[i].unit, arr[i].major, arr[i].academy];
+        }
+        return res;
+    }
+
+    function loadDetail(id) {
+        $.ajax({
+            url: `a/s/${id}`, type: 'get', dataType: 'json',
+            success: function (res) {
+                if (res.ok) {
+                    form_data = parseData(res.obj);
+                    table.loadData(form_data);
+                }
+                else showTip(res.msg);
+            },
+            error: function () {
+                showTip('网络错误, 请检查网络连接')
+            }
+        });
+        $('.longer.modal').modal({closable: false}).modal('toggle');
+    }
+
+    function exportTable() {
+
+    }
 </script>

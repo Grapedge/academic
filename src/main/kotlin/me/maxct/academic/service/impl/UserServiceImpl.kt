@@ -62,13 +62,13 @@ class UserServiceImpl : UserService {
             )
             var flag = true
             var name = ""
-            for (x in list) {
-                if (x?.id?.course?.day == course.day
-                    && x?.id?.course?.courseOrder == course.courseOrder
-                    && x?.id?.course?.flag?.and(course.flag!!) != 0
+            for ((id) in list) {
+                if (id?.course?.day == course.day
+                    && id?.course?.courseOrder == course.courseOrder
+                    && id?.course?.flag?.and(course.flag!!) != 0
                     ) {
                     flag = false
-                    name = x?.id?.course?.courseName!!
+                    name = id?.course?.courseName!!
                     break
                 }
             }
@@ -100,15 +100,15 @@ class UserServiceImpl : UserService {
     override fun getChosenCourse(user: User): Msg<*> {
         val list = selectionRepository.getSelectionByUser(user)
         val arr = ArrayList<Any>()
-        for (x in list) {
+        for ((id, score) in list) {
             val obj = NetMsg()
-            obj.put("courseId", x?.id?.course?.id)
-                .put("semester", x?.id?.course?.semester?.name)
-                .put("courseName", x?.id?.course?.courseName)
-                .put("teacher", x?.id?.course?.teacher?.profile?.name)
-                .put("credit", x?.id?.course?.credit)
-                .put("total", x?.id?.course?.total)
-                .put("score", x?.score)
+            obj.put("courseId", id?.course?.id)
+                .put("semester", id?.course?.semester?.name)
+                .put("courseName", id?.course?.courseName)
+                .put("teacher", id?.course?.teacher?.profile?.name)
+                .put("credit", id?.course?.credit)
+                .put("total", id?.course?.total)
+                .put("score", score)
             arr.add(obj.list)
         }
         return Msg.ok("ok", arr)
@@ -117,18 +117,18 @@ class UserServiceImpl : UserService {
     override fun getCourseSchedule(user: User, semester: Semester): Msg<*> {
         val list = selectionRepository.getSelectionBySemesterAndUser(semester, user)
         val arr = ArrayList<Any>()
-        for (x in list) {
+        for ((id) in list) {
             val res = NetMsg()
-            res.put("id", x!!.id!!.course!!.id)
-                .put("name", x.id!!.course?.courseName)
-                .put("teacher", x.id.course?.teacher?.profile?.name)
-                .put("location", x.id.course?.location)
-                .put("credit", x.id.course?.credit)
-                .put("day", x.id.course?.day)
-                .put("week", StringUtil.readWeek(x.id.course?.week!!))
-                .put("order", x.id.course.courseOrder)
-            val time = "周" + StringUtil.getWeekDayName(x.id.course.day!!) + "第${x.id.course.courseOrder}节"
-            res.put("time", time).put("number", "${x.id.course.remaining}/${x.id.course.total}")
+            res.put("id", id!!.course!!.id)
+                .put("name", id.course?.courseName)
+                .put("teacher", id.course?.teacher?.profile?.name)
+                .put("location", id.course?.location)
+                .put("credit", id.course?.credit)
+                .put("day", id.course?.day)
+                .put("week", StringUtil.readWeek(id.course?.week!!))
+                .put("order", id.course.courseOrder)
+            val time = "周" + StringUtil.getWeekDayName(id.course.day!!) + "第${id.course.courseOrder}节"
+            res.put("time", time).put("number", "${id.course.remaining}/${id.course.total}")
             arr.add(res.list)
         }
         return Msg.ok("ok", arr)

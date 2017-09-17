@@ -16,12 +16,19 @@ class IndexController {
 
     @GetMapping("/home")
     fun home(principal: Principal): String {
+        println("invoked!")
         return if (principal is UsernamePasswordAuthenticationToken) {
             val str = principal.authorities.joinToString(",")
             when {
-                str.contains("SYSTEM") -> "redirect:/system.html"
-                str.contains("ADMIN") -> "redirect:/admin.html"
-                else -> "redirect:/"
+                str.contains("SYSTEM") -> {
+                    "redirect:/system.html"
+                }
+                str.contains("ADMIN") -> {
+                    "redirect:/admin.html"
+                }
+                else -> {
+                    "redirect:/"
+                }
             }
         } else {
             "redirect:/"
