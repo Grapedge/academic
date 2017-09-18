@@ -2,6 +2,7 @@ package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.bean.NetMsg
+import me.maxct.academic.bean.Scores
 import me.maxct.academic.entity.*
 import me.maxct.academic.repository.CourseRepository
 import me.maxct.academic.repository.RecordRepository
@@ -62,7 +63,7 @@ class AdminController {
     fun getSelection(@PathVariable id: Long, principal: Principal): Msg<*> {
         val list = selectionRepository.getSelectionByCourse(Course(id = id))
         val arr = ArrayList<Any>()
-        for ((idx) in list){
+        for ((idx, score) in list) {
             val o = NetMsg()
             o.put("stuNo", idx?.user?.username)
                 .put("name", idx?.user?.profile?.name)
@@ -70,6 +71,7 @@ class AdminController {
                 .put("academy", idx?.user?.profile?.major?.academy?.name)
                 .put("major", idx?.user?.profile?.major?.name)
                 .put("unit", idx?.user?.profile?.unit)
+                .put("score", score)
             arr.add(o.list)
         }
         return Msg.ok("ok", arr)
@@ -127,7 +129,7 @@ class AdminController {
             Sort(Sort.Direction.DESC, "id")
         )
         val arr = ArrayList<Any>()
-        for (x in list){
+        for (x in list) {
             val o = NetMsg()
             o.put("id", x.id)
                 .put("stuNo", x.user?.username)
@@ -138,5 +140,27 @@ class AdminController {
             arr.add(o.list)
         }
         return Msg.ok("ok", arr)
+    }
+
+    //批量更新成绩
+    @PostMapping("/up")
+    fun updateScoreBatch(@RequestBody scores: Scores, principal: Principal): Msg<*> {
+        val cid = Course(id = scores.cid)
+        val list = ArrayList<Selection>()
+        scores.list
+            .filter { it.credit >= 0 }
+            .mapTo(list) {
+                Selection(
+                    id = SelectionId(
+                        course = cid,
+                        user = User(username = it.stuNo)
+                    ),
+                    score = it.credit
+                )
+            }
+        return adminService.saveScoreInBatch(
+            User(username = principal.name),
+            list
+        )
     }
 }

@@ -39,11 +39,15 @@
         <div id="table"></div>
     </div>
     <div class="actions">
+        <div class="ui gray negative button">关闭</div>
+        <div class="ui secondary button" onclick="uploadScore()">上传成绩</div>
         <div class="ui primary button" onclick="exportTable()">导出</div>
     </div>
 </div>
 <script>
     var form_data = [];
+    var courseId = -1;
+    var headers = ['姓名', '性别', '学号', '班级', '专业', '学院', '成绩'];
     var course = new Vue({
         el: '#course',
         data: {arr: null, data: null,},
@@ -70,19 +74,36 @@
     var container = document.querySelector('#table');
     var table = new Handsontable(container, {
         data: form_data,
-        rowHeaders: true
+        rowHeaders: true,
+        colHeaders: headers,
+        width: 800,
+        height: 500
     });
 
     function parseData(arr) {
         var res = [];
-        res[0] = ['姓名', '性别', '学号', '班级', '专业', '学院'];
+        //res[0] = ['姓名', '性别', '学号', '班级', '专业', '学院', '成绩'];
         for (var i = 0; i < arr.length; i++) {
-            res[i + 1] = [arr[i].name, arr[i].gender, arr[i].stuNo, arr[i].unit, arr[i].major, arr[i].academy];
+            res[i] = [arr[i].name, arr[i].gender, arr[i].stuNo, arr[i].unit,
+                arr[i].major, arr[i].academy, arr[i].score];
+        }
+        return res;
+    }
+
+    function reverseData(arr) {
+        var res = {};
+        var tot = 0;
+        res.cid = courseId;
+        res.list = [];
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i][6] >= 0)
+                res.list[tot++] = {stuNo: arr[i][2], credit: arr[i][6]};
         }
         return res;
     }
 
     function loadDetail(id) {
+        courseId = id;
         $.ajax({
             url: `a/s/${id}`, type: 'get', dataType: 'json',
             success: function (res) {
@@ -100,6 +121,71 @@
     }
 
     function exportTable() {
+        doIt([headers].concat(form_data), 'xlsx', '导出信息.xlsx');
+        //$('.longer.modal').modal('toggle');
+    }
 
+    function checkScore() {
+        for (var i = 0; i < form_data.length; i++)
+            if (form_data[i][6] < 0) return false;
+        return true;
+    }
+
+    function uploadScore() {
+        if (!checkScore()) {
+            if (!confirm('尚存在未输入成绩的学生, 确定上传吗?'))
+                return;
+        }
+        var data = reverseData(form_data);
+        $.ajax({
+            url: 'a/up', data: JSON.stringify(data), type: 'post', dataType: 'json',
+            contentType: 'application/json',
+            success: function (res) {
+                if (res.ok) showTip(`更新了${res.obj}条数据`);
+                else showTip(res.msg)
+            },
+            error: function () {
+                showTip('网络错误, 请检查网络连接');
+            }
+        });
+    }
+
+    function s2ab(s) {
+        if (typeof ArrayBuffer !== 'undefined') {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        } else {
+            var buf = new Array(s.length);
+            for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+    }
+
+    function Workbook() {
+        if (!(this instanceof Workbook)) return new Workbook();
+        this.SheetNames = [];
+        this.Sheets = {};
+    }
+
+    function export_table_to_excel(arr, type, fn) {
+        var ws = XLSX.utils.aoa_to_sheet(arr);
+        var workBook = new Workbook();
+        var sheetName = 'sheet 1';
+        workBook.SheetNames.push(sheetName);
+        workBook.Sheets[sheetName] = ws;
+        var wbout = XLSX.write(workBook, {bookType: type, bookSST: true, type: 'binary'});
+        var fname = fn || 'test.' + type;
+        try {
+            saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), fname);
+        } catch (e) {
+            if (typeof console != 'undefined') console.log(e, wbout);
+        }
+        return wbout;
+    }
+
+    function doIt(arr, type, fn) {
+        return export_table_to_excel(arr, type || 'xlsx', fn);
     }
 </script>

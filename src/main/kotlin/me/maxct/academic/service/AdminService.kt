@@ -27,7 +27,15 @@ interface AdminService {
      * 登记成绩
      * @param operator 登记教工
      * @param selection 选课记录
+     * @return dto
      */
     fun createScore(operator: User, selection: Selection): Msg<*>
 
+    /**
+     * 批量登记成绩
+     * @param operator
+     * @param list
+     * @return dto
+     */
+    fun saveScoreInBatch(operator: User, list: List<Selection>): Msg<*>
 }

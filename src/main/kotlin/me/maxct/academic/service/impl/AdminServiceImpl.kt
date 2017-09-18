@@ -1,9 +1,7 @@
 package me.maxct.academic.service.impl
 
 import me.maxct.academic.bean.Msg
-import me.maxct.academic.entity.Record
-import me.maxct.academic.entity.Selection
-import me.maxct.academic.entity.User
+import me.maxct.academic.entity.*
 import me.maxct.academic.exception.ServiceException
 import me.maxct.academic.repository.RecordRepository
 import me.maxct.academic.repository.SelectionRepository
@@ -42,4 +40,9 @@ class AdminServiceImpl : AdminService {
             selectionRepository.updateSelectionScore(selection.id, selection.score) == 1 -> Msg.ok("操作成功")
             else -> Msg.err("操作失败,成绩录入后无法修改")
         }
+
+    override fun saveScoreInBatch(operator: User, list: List<Selection>): Msg<*> {
+        val cnt = list.sumBy { selectionRepository.updateSelectionScore(it.id!!, it.score) }
+        return Msg.ok("ok", cnt)
+    }
 }
