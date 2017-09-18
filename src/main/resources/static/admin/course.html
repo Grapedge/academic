@@ -141,11 +141,10 @@
             url: 'a/up', data: JSON.stringify(data), type: 'post', dataType: 'json',
             contentType: 'application/json',
             success: function (res) {
-                if (res.ok) showTip(`更新了${res.obj}条数据`);
-                else showTip(res.msg)
+                alert(res.msg);
             },
             error: function () {
-                showTip('网络错误, 请检查网络连接');
+                alert('网络错误, 请检查网络连接');
             }
         });
     }

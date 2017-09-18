@@ -137,7 +137,7 @@
                 var $e = $(event.currentTarget);
                 $e.attr('disabled', 'disabled');
                 $.ajax({
-                    url: `r/d/${_self.arr[id].id}`, type: 'delete', dataType: 'json',
+                    url: `a/r/${_self.arr[id].id}`, type: 'delete', dataType: 'json',
                     success: function (res) {
                         $e.attr('disabled', null);
                         if (res.ok) {

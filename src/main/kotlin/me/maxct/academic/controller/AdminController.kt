@@ -106,7 +106,7 @@ class AdminController {
     //删除奖惩记录
     @DeleteMapping("/r/{id}")
     fun deleteRecord(@PathVariable id: Long, principal: Principal): Msg<*> =
-        adminService.deleteRecord(User(username = principal.name), Record(id = id))
+        adminService.deleteRecord(User(username = principal.name), recordRepository.findOne(id))
 
     //查询学生信息
     @PostMapping("/i")

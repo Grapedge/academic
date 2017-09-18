@@ -29,8 +29,8 @@ class AdminServiceImpl : AdminService {
 
     override fun deleteRecord(operator: User, record: Record): Msg<*> =
         when {
-            record.performer != operator -> Msg.err("无法删除本人户可以")
-            (recordRepository.deleteById(record.id!!).toInt() == 1) -> Msg.ok("删除成功")
+            !operator.username.equals(record.performer?.username) -> Msg.err("无法删除, 仅能删除本人操作的记录.")
+            (recordRepository.deleteById(record.id!!) == 1) -> Msg.ok("删除成功")
             else -> throw ServiceException("删除失败")
         }
 
@@ -43,6 +43,6 @@ class AdminServiceImpl : AdminService {
 
     override fun saveScoreInBatch(operator: User, list: List<Selection>): Msg<*> {
         val cnt = list.sumBy { selectionRepository.updateSelectionScore(it.id!!, it.score) }
-        return Msg.ok("ok", cnt)
+        return Msg.ok("更新了 $cnt 条记录, 有${list.size - cnt}条已经录入, 无法更改.")
     }
 }
