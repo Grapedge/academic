@@ -2,9 +2,13 @@ package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.*
+import me.maxct.academic.repository.MajorRepository
+import me.maxct.academic.repository.ProfileRepository
 import me.maxct.academic.repository.SettingRepository
 import me.maxct.academic.service.SystemService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
@@ -20,6 +24,10 @@ class SystemController {
     private lateinit var systemService: SystemService
     @Autowired
     private lateinit var settingRepository: SettingRepository
+    @Autowired
+    private lateinit var profileRepository: ProfileRepository
+    @Autowired
+    private lateinit var majorRepository: MajorRepository
 
     //创建学院
     @PostMapping("/a")
@@ -86,6 +94,20 @@ class SystemController {
     @PostMapping("/info")
     fun getUsersInfo(@RequestParam(required = false) workNo: String?, @RequestParam(required = false) gender: String?,
                      @RequestParam(required = false) major: Long?, @RequestParam(required = false) role: String?): Msg<*> {
-        TODO("ddd")
+        val m = if (major != null) majorRepository.findOne(major) else null
+        val no = if (workNo == null || "" == workNo) null else workNo
+        val g = if (gender == null || gender == "") null else gender
+
+        val e = Example.of(Profile(
+            workNo = no,
+            gender = g,
+            major = m,
+            user = User(
+                roles = role
+            )
+        ), ExampleMatcher.matching().withIgnoreNullValues())
+        val res = profileRepository.findAll(e)
+        if (m != null) res.removeIf({ it -> m != it.major })
+        return Msg.ok("ok", res)
     }
 }

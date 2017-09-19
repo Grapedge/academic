@@ -1,64 +1,61 @@
 <div class="ui grid" id="user-info">
-    <div class="column">
-        <div class="ui form">
-            <div class="fields">
-                <div class="field">
-                    <label>学工号</label>
-                    <input v-model="limit.workNo">
+    <div class="row">
+        <div class="column">
+            <div class="ui form">
+                <div class="fields">
+                    <div class="field">
+                        <label>学工号</label>
+                        <input v-model="limit.workNo">
+                    </div>
+                    <div class="field">
+                        <label>性别</label>
+                        <select v-model="limit.gender">
+                            <option>未知</option>
+                            <option>男</option>
+                            <option>女</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>专业</label>
+                        <select v-model="limit.major">
+                            <option v-for="x in majors" :value="x.id">{{ x.name }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>身份</label>
+                        <select v-model="limit.role">
+                            <option value="ROLE_USER">学生</option>
+                            <option value="ROLE_USER,ROLE_ADMIN">教工</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="field">
-                    <label>性别</label>
-                    <select v-model="limit.gender">
-                        <option>未知</option>
-                        <option>男</option>
-                        <option>女</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>专业</label>
-                    <select v-model="limit.major">
-                        <option v-for="x in majors" :value="x.id">{{ x.name }}</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>身份</label>
-                    <select v-model="limit.role">
-                        <option value="ROLE_USER">学生</option>
-                        <option value="ROLE_USER,ROLE_ADMIN">教工</option>
-                    </select>
-                </div>
+                <div class="ui teal button" @click="searchUser()">查找</div>
             </div>
-            <div class="ui teal button" @click="searchUser()">查找</div>
         </div>
     </div>
-
-    <div class="column" v-show="res">
-        <div id="table2">
-
+    <div class="ui divider"></div>
+    <div class="row">
+        <div class="column" v-show="res">
+            <div class="ui buttons">
+                <div class="ui primary button">导出数据</div>
+                <div class="ui teal button">上传数据</div>
+            </div>
+            <div id="table2">
+            </div>
         </div>
     </div>
 </div>
 <script>
-    var table_data = [];
-    var headers = ['id', '姓名', '身份证', '性别', '生日', '单位/班级', '学工号', '地址'];
-    var container = document.querySelector('#table2');
-    var table = new Handsontable(container, {
-        data: form_data,
-        rowHeaders: true,
-        colHeaders: headers,
-        width: 800,
-        height: 500,
-        columns: [
-            {data: 'id', readOnly: true}, {data: 'name'}, {data: 'idNo'}, {data: 'gender'}, {data: 'birthday'},
-            {data: 'unit'}, {data: 'workNo'}, {data: 'address'}
-        ]
-    });
+    var table_data = null;
+    var headers = ['id', '姓名', '身份证', '性别', '专业', '学院', '生日', '单位/班级', '学工号', '地址'];
+    var container = null;
+    var table = null;
     var user_info = new Vue({
         el: '#user-info',
         data: {
             limit: {
                 workNo: null,
-                gender: '未知',
+                gender: null,
                 major: null,
                 role: 'ROLE_USER'
             },
@@ -82,17 +79,49 @@
             searchUser: function () {
                 var _self = this;
                 $.ajax({
-                    url: 'a/info', type: 'post', dataType: 'json', data: _self.limit,
+                    url: 's/info', type: 'post', dataType: 'json', data: _self.limit,
                     success: function (res) {
-
+                        if (res.ok) {
+                            table_data = JSON.parse(JSON.stringify(res.obj));
+                            _self.res = res.obj.slice();
+                            showTable();
+                        } else showTip(res.msg)
                     },
                     error: function () {
-
+                        showTip('网络错误, 请检查网络连接')
                     }
                 });
+            },
+            updateUserInfo: function () {
+
             }
         }
     });
-    user_info.loadData();
 
+    function showTable() {
+        container = document.querySelector('#table2');
+        $(container).html('');
+        table = new Handsontable(container, {
+            data: table_data,
+            rowHeaders: true,
+            colHeaders: headers,
+            columns: [
+                {data: 'id', readOnly: true}, {data: 'name'}, {data: 'idNo'}, {data: 'gender'},
+                {data: 'major.name', readOnly: true}, {data: 'major.academy.name', readOnly: true}, {data: 'birthday'},
+                {data: 'unit'}, {data: 'workNo'}, {data: 'address'}
+            ],
+            height: 500
+        });
+    }
+    function getOffsetData(ori) {
+        var res = [];
+        for (var i=0; i<ori.length; i++){
+            if (ori[i].id == table_data[i].id){
+                var a = JSON.stringify(ori[i]), b = JSON.stringify(table_data[i]);
+                if (a != b) res.push(table_data[i]);
+            }
+        }
+        return res;
+    }
+    user_info.loadData();
 </script>

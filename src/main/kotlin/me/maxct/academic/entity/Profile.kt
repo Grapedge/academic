@@ -1,6 +1,7 @@
 package me.maxct.academic.entity
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.io.Serializable
 import java.time.LocalDate
 import javax.persistence.*
@@ -31,7 +32,7 @@ data class Profile(
     val idNo: String? = null,
 
     @Column(length = 4)
-    val gender: String = "未知",
+    val gender: String? = "未知",
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     val birthday: LocalDate? = null,
@@ -39,7 +40,7 @@ data class Profile(
     @Column(length = 200)
     val unit: String? = null,
 
-    @Column(length = 30)
+    @Column(length = 30, unique = true)
     val workNo: String? = null,
 
     @Column(columnDefinition = "TEXT")
@@ -47,7 +48,11 @@ data class Profile(
 
     @ManyToOne
     @JoinColumn
-    val major: Major? = null
+    val major: Major? = null,
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "profile")
+    val user: User? = null
 ) : Serializable {
     private constructor() : this(gender = "未知")
 }

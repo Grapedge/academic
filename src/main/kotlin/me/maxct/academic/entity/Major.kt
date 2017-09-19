@@ -24,4 +24,11 @@ data class Major(
     val academy: Academy? = null
 ) : Serializable {
     private constructor() : this(null)
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Major) {
+            return other.id == this.id
+        }
+        return false
+    }
 }

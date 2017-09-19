@@ -24,9 +24,9 @@ data class User(
     val password: String? = null,
 
     @Column(length = 50)
-    val roles: String = "ROLE_USER",
+    val roles: String? = "ROLE_USER",
 
-    @OneToOne
+    @OneToOne(cascade = arrayOf(CascadeType.ALL))
     @JoinColumn
     val profile: Profile? = null
 ) : Serializable {
