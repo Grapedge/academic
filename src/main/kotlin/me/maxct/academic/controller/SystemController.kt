@@ -77,8 +77,15 @@ class SystemController {
         return Msg.ok("ok", map)
     }
 
+    //更新设置
     @PostMapping("/s")
     fun updateSetting(@RequestParam name: String, @RequestParam value: String): Msg<*> =
         if (settingRepository.save(Setting(name, value)) != null) Msg.ok("ok")
         else Msg.err("更新失败")
+
+    @PostMapping("/info")
+    fun getUsersInfo(@RequestParam(required = false) workNo: String?, @RequestParam(required = false) gender: String?,
+                     @RequestParam(required = false) major: Long?, @RequestParam(required = false) role: String?): Msg<*> {
+        TODO("ddd")
+    }
 }

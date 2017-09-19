@@ -1,0 +1,98 @@
+<div class="ui grid" id="user-info">
+    <div class="column">
+        <div class="ui form">
+            <div class="fields">
+                <div class="field">
+                    <label>学工号</label>
+                    <input v-model="limit.workNo">
+                </div>
+                <div class="field">
+                    <label>性别</label>
+                    <select v-model="limit.gender">
+                        <option>未知</option>
+                        <option>男</option>
+                        <option>女</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>专业</label>
+                    <select v-model="limit.major">
+                        <option v-for="x in majors" :value="x.id">{{ x.name }}</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>身份</label>
+                    <select v-model="limit.role">
+                        <option value="ROLE_USER">学生</option>
+                        <option value="ROLE_USER,ROLE_ADMIN">教工</option>
+                    </select>
+                </div>
+            </div>
+            <div class="ui teal button" @click="searchUser()">查找</div>
+        </div>
+    </div>
+
+    <div class="column" v-show="res">
+        <div id="table2">
+
+        </div>
+    </div>
+</div>
+<script>
+    var table_data = [];
+    var headers = ['id', '姓名', '身份证', '性别', '生日', '单位/班级', '学工号', '地址'];
+    var container = document.querySelector('#table2');
+    var table = new Handsontable(container, {
+        data: form_data,
+        rowHeaders: true,
+        colHeaders: headers,
+        width: 800,
+        height: 500,
+        columns: [
+            {data: 'id', readOnly: true}, {data: 'name'}, {data: 'idNo'}, {data: 'gender'}, {data: 'birthday'},
+            {data: 'unit'}, {data: 'workNo'}, {data: 'address'}
+        ]
+    });
+    var user_info = new Vue({
+        el: '#user-info',
+        data: {
+            limit: {
+                workNo: null,
+                gender: '未知',
+                major: null,
+                role: 'ROLE_USER'
+            },
+            majors: [],
+            res: null
+        },
+        methods: {
+            loadData: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'u/m', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.majors = res.obj;
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('载入专业出错, 请检查网络连接');
+                    }
+                })
+            },
+            searchUser: function () {
+                var _self = this;
+                $.ajax({
+                    url: 'a/info', type: 'post', dataType: 'json', data: _self.limit,
+                    success: function (res) {
+
+                    },
+                    error: function () {
+
+                    }
+                });
+            }
+        }
+    });
+    user_info.loadData();
+
+</script>
