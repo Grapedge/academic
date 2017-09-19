@@ -2,6 +2,7 @@ package me.maxct.academic.controller
 
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.*
+import me.maxct.academic.repository.SettingRepository
 import me.maxct.academic.service.SystemService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,6 +18,8 @@ import java.security.Principal
 class SystemController {
     @Autowired
     private lateinit var systemService: SystemService
+    @Autowired
+    private lateinit var settingRepository: SettingRepository
 
     //创建学院
     @PostMapping("/a")
@@ -62,4 +65,20 @@ class SystemController {
         )
         return systemService.saveCourse(User(username = principal.name), course)
     }
+
+    //获取所有的设置
+    @GetMapping("/s")
+    fun getAllSettings(): Msg<*> {
+        val list = settingRepository.findAll()
+        val map = HashMap<String, Any>()
+        for ((name, value) in list) {
+            map.put(name!!, value!!)
+        }
+        return Msg.ok("ok", map)
+    }
+
+    @PostMapping("/s")
+    fun updateSetting(@RequestParam name: String, @RequestParam value: String): Msg<*> =
+        if (settingRepository.save(Setting(name, value)) != null) Msg.ok("ok")
+        else Msg.err("更新失败")
 }
