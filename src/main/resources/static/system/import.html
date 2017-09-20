@@ -15,7 +15,6 @@
     </div>
     <div class="row">
         <div class="column">
-            <div id="submit" class="ui primary button">导入数据</div>
             <div class="ui small form" id="hash">
                 <h3>选择各属性对应的列</h3>
                 <div class="fields">
@@ -71,47 +70,108 @@
                             <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
                         </select>
                     </div>
+                    <div class="field">
+                        <label>导入教师</label>
+                        <input type="checkbox" v-model="isTeacher">
+                    </div>
                 </div>
+                <div id="submit" class="ui primary button" @click="uploadData()">导入数据</div>
             </div>
             <div id="hot"></div>
         </div>
     </div>
 </div>
 <script>
-    $('#submit').hide();
+    $('#hash').hide();
     var file_data = null;
-    $(document)
-        .on('click', '#submit', function (event) {
+    var info = null;
 
-        });
-
-
-    function parseData(arr) {
-
-    }
-
-    var info = new Vue({
-        el: '#hash',
-        data: {
-            hasHeader: true, name: null,idNo: null, gender: null, major: null, birthday: null,
-            unit: null, workNo: null, address: null,
-            header: function () {
-                var res = [];
-                if (file_data) {
-                    if (this.hasHeader) {
-                        for (var i=0; i < file_data[0].length; i++) {
+    function newVue() {
+        info = new Vue({
+            el: '#hash',
+            data: {
+                hasHeader: true, name: null, idNo: null, gender: null, major: null,
+                birthday: null, unit: null, workNo: null, address: null, colName: [],
+                isTeacher: false
+            },
+            computed: {
+                header: function () {
+                    var res = [];
+                    if (this.hasHeader && file_data && file_data.length > 0) {
+                        for (var i = 0; i < file_data[0].length; i++) {
                             res[i] = file_data[0][i];
                         }
-                    }else {
-                        for (var i=0; i<file_data[0].length; i++) {
+                    } else if (file_data && file_data.length > 0) {
+                        for (var i = 0; i < file_data[0].length; i++) {
                             res[i] = String.fromCharCode(65 + i);
                         }
                     }
+                    return res;
                 }
-                return res;
+            },
+            methods: {
+                parseData: function (arr) {
+                    var data = [];
+                    var st = (this.hasHeader ? 1 : 0);
+                    var tot = 0;
+                    for (var i = st; i < arr.length; i++) {
+                        data[tot] = {};
+                        for (var j = 0; j < arr[i].length; j++) {
+                            if (this.colName[j]) {
+                                data[tot][this.colName[j]] = arr[i][j];
+                            }
+                        }
+                        tot++;
+                    }
+                    return data;
+                },
+                checkHead: function () {
+                    var h = new Array(100);
+                    for (var i = 0; i < 100; i++) h[i] = 0;
+                    h[this.name]++;
+                    h[this.idNo]++;
+                    h[this.gender]++;
+                    h[this.major]++;
+                    h[this.birthday]++;
+                    h[this.unit]++;
+                    h[this.workNo]++;
+                    h[this.address]++;
+                    var res = 0;
+                    for (var i = 0; i < file_data[0].length; i++) {
+                        if (h[i] > 1) return false;
+                        if (h[i] != 0) res++;
+                    }
+                    this.colName[this.name] = 'name';
+                    this.colName[this.idNo] = 'idNo';
+                    this.colName[this.gender] = 'gender';
+                    this.colName[this.major] = 'major';
+                    this.colName[this.birthday] = 'birthday';
+                    this.colName[this.unit] = 'unit';
+                    this.colName[this.workNo] = 'workNo';
+                    this.colName[this.address] = 'address';
+                    return res === 8;
+                },
+                uploadData: function () {
+                    var _self = this;
+                    if (_self.checkHead()) {
+                        $.ajax({
+                            url: 's/bi', type: 'post', dataType: 'json', contentType: 'application/json',
+                            data: JSON.stringify({teacher: _self.isTeacher, list: _self.parseData(file_data)}),
+                            success: function (res) {
+                                showTip(res.msg)
+                            },
+                            error: function () {
+                                alertify.error('网络错误, 请检查')
+                            }
+                        })
+                    } else {
+                        showTip('表格项与属性对应关系不正确')
+                    }
+                }
             }
-        }
-    });
+        });
+    }
+
 
     var _target = document.getElementById('drop');
 
@@ -121,7 +181,7 @@
 
     var _workend = function () {
         alertify.success('处理完成');
-        $('#submit').show();
+        $('#hash').show();
     };
 
     var _badfile = function () {
@@ -177,6 +237,7 @@
             stretchH: 'all',
             rowHeaders: true,
             colHeaders: true,
+            contextMenu: true,
             width: function () {
                 return availableWidth;
             },
@@ -184,6 +245,7 @@
                 return availableHeight;
             }
         });
+        newVue();
     };
 
     DropSheet({

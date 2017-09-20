@@ -76,5 +76,23 @@ class SystemServiceImpl : SystemService {
     }
 
     override fun updateProfileInBatch(operator: User, list: List<Profile>): Msg<*> =
-        Msg.ok("ok", profileRepository.save(list).size)
+        Msg.ok("", profileRepository.save(list).size)
+
+    override fun importProfileInBatch(operator: User, list: List<Profile>, isTeacher: Boolean): Msg<*> {
+        val res = profileRepository.save(list)
+        var role = "ROLE_USER"
+        if (isTeacher) role = "ROLE_USER,ROLE_ADMIN"
+        println(role)
+        val arr = ArrayList<User>()
+        res.mapTo(arr) {
+            User(
+                username = it.workNo,
+                password = it.idNo?.substring(it.idNo.length - 6, it.idNo.length) ?: "123456",
+                roles = role,
+                profile = it
+            )
+        }
+        val num = userRepository.save(arr).size
+        return Msg.ok("保存了$num 条数据")
+    }
 }

@@ -106,7 +106,7 @@
                             url: 's/b', type: 'post', dataType: 'json', contentType: 'application/json',
                             data: JSON.stringify({list: offset}),
                             success: function (res) {
-                                if (res.ok) showTip(`上传完成, 更新了${res.obj}条数据`)
+                                if (res.ok) showTip(`上传完成, 更新了${res.obj}条数据`);
                                 else showTip(res.msg);
                             },
                             error: function () {

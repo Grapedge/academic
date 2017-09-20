@@ -1,12 +1,11 @@
 package me.maxct.academic.controller
 
-import me.maxct.academic.bean.Info
 import me.maxct.academic.bean.Information
 import me.maxct.academic.bean.Msg
+import me.maxct.academic.bean.Profiles
 import me.maxct.academic.entity.*
 import me.maxct.academic.repository.*
 import me.maxct.academic.service.SystemService
-import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
@@ -179,4 +178,22 @@ class SystemController {
     @PostMapping("/se")
     fun saveSemester(@RequestBody semester: Semester, principal: Principal): Msg<*> =
         systemService.saveSemester(User(username = principal.name), semester)
+
+    @PostMapping("/bi")
+    fun batchImport(@RequestBody profiles: Profiles, principal: Principal): Msg<*> {
+        val list = ArrayList<Profile>()
+        profiles.list.mapTo(list) {
+            Profile(
+                name = it.name,
+                idNo = it.idNo,
+                gender = it.gender,
+                birthday = it.birthday,
+                unit = it.unit,
+                workNo = it.workNo,
+                address = it.address,
+                major = Major(id = it.major)
+            )
+        }
+        return systemService.importProfileInBatch(User(username = principal.name), list, profiles.teacher)
+    }
 }

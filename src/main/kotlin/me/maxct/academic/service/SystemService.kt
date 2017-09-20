@@ -68,5 +68,13 @@ interface SystemService {
      */
     fun getUserInfo(operator: User, id: String): Msg<*>
 
+    /**
+     * 批量更新用户信息
+     */
     fun updateProfileInBatch(operator: User, list: List<Profile>): Msg<*>
+
+    /**
+     * 批量导入用户
+     */
+    fun importProfileInBatch(operator: User, list: List<Profile>, isTeacher: Boolean): Msg<*>
 }
