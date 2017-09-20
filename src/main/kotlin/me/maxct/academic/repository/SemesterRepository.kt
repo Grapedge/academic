@@ -24,7 +24,7 @@ interface SemesterRepository : JpaRepository<Semester, Long> {
         "where ( :s between i.beginDate and i.endDate) or ( :t between i.beginDate and i.endDate)")
     fun existSemester(@Param("s") beginDate: LocalDate, @Param("t") endDate: LocalDate): Boolean
 
-    @Cacheable
+    /*@Cacheable*/
     @Query("from Semester")
     fun getAllSemesters(): List<Semester?>
 }

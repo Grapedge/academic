@@ -1,0 +1,161 @@
+<style>
+    #drop {
+        min-height: 80px;
+        border: 2px dashed lightgrey;
+        border-radius: 5px;
+        text-align: center;
+        padding: 25px;
+    }
+</style>
+<div class="ui container">
+    <div class="row">
+        <div class="column">
+            <div id="drop">将文件拖拽至此</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div id="submit" class="ui primary button">导入数据</div>
+            <div class="ui small form" id="hash">
+                <h3>选择各属性对应的列</h3>
+                <div class="fields">
+                    <div class="field">
+                        <label>表格数据含有表头</label>
+                        <input type="checkbox" v-model="hasHeader">
+                    </div>
+                    <div class="field">
+                        <label>姓名</label>
+                        <select v-model="name">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="hot"></div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#submit').hide();
+    var file_data = null;
+    $(document)
+        .on('click', '#submit', function (event) {
+
+        });
+
+
+    function parseData(arr) {
+
+    }
+
+    var info = new Vue({
+        el: '#hash',
+        data: {hasHeader: true, name: null, }
+    });
+
+    var _target = document.getElementById('drop');
+
+    var _workstart = function () {
+        alertify.notify('开始处理')
+    };
+
+    var _workend = function () {
+        alertify.success('处理完成');
+        $('#submit').show();
+    };
+
+    var _badfile = function () {
+        alertify.alert('文件格式错误', function () {
+        });
+    };
+
+    var _pending = function () {
+        alertify.alert('正在处理文件, 请稍候', function () {
+        });
+    };
+
+    var _large = function (len, cb) {
+        alertify.confirm('文件很大, 确定处理吗?', cb);
+    };
+
+    var _failed = function (e) {
+        console.log(e, e.stack);
+        alertify.alert('处理文件失败', function () {
+        });
+    };
+
+    var $container, $parent, $window, availableWidth, availableHeight;
+    var calculateSize = function () {
+        var offset = $container.offset();
+        availableWidth = Math.max($container.parent().width(), 600);
+        availableHeight = Math.max($container.parent().height(), 400);
+    };
+
+    $(document).ready(function () {
+        $container = $("#hot");
+        $parent = $container.parent();
+        $window = $(window);
+        $window.on('resize', calculateSize);
+    });
+
+    /* make the buttons for the sheets */
+    var make_buttons = function (sheetnames, cb) {
+        var $buttons = $('#buttons');
+        $buttons.html("");
+        sheetnames.forEach(function (s, idx) {
+            var button = $('<button/>').attr({type: 'button', name: 'btn' + idx, text: s});
+            button.append('<h3>' + s + '</h3>');
+            button.click(function () {
+                cb(idx);
+            });
+            $buttons.append(button);
+            $buttons.append('<br/>');
+        });
+    };
+
+    var _onsheet = function (json, sheetnames, select_sheet_cb) {
+        $('#footnote').hide();
+
+        make_buttons(sheetnames, select_sheet_cb);
+        calculateSize();
+
+        /* add header row for table */
+        if (!json) json = [];
+        json.forEach(function (r) {
+            if (json[0].length < r.length) json[0].length = r.length;
+        });
+        file_data = json;/*JSON.parse(JSON.stringify(json));*/
+        calculateSize();
+        /* showtime! */
+        $("#hot").handsontable({
+            data: json,
+            startRows: 5,
+            startCols: 3,
+            stretchH: 'all',
+            rowHeaders: true,
+            colHeaders: true,
+            width: function () {
+                return availableWidth;
+            },
+            height: function () {
+                return availableHeight;
+            }
+        });
+    };
+
+    DropSheet({
+        drop: _target,
+        on: {
+            workstart: _workstart,
+            workend: _workend,
+            sheet: _onsheet,
+            foo: 'bar'
+        },
+        errors: {
+            badfile: _badfile,
+            pending: _pending,
+            failed: _failed,
+            large: _large,
+            foo: 'bar'
+        }
+    })
+</script>

@@ -1,13 +1,13 @@
 <ehcache>
-    <cache name="academy"
+    <!--<cache name="academy"
            maxEntriesLocalHeap="90"
-           timeToLiveSeconds="800"/>
-    <cache name="major"
+           timeToLiveSeconds="800"/>-->
+    <!--<cache name="major"
            maxEntriesLocalHeap="200"
-           timeToLiveSeconds="600"/>
-    <cache name="roles"
+           timeToLiveSeconds="600"/>-->
+    <!--<cache name="roles"
            maxEntriesLocalHeap="10"
-           timeToLiveSeconds="800"/>
+           timeToLiveSeconds="800"/>-->
     <cache name="semester"
            maxEntriesLocalHeap="90"
            timeToLiveSeconds="800"/>

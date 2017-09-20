@@ -165,8 +165,18 @@ class SystemController {
         }
     }
 
+    //保存学院信息
     @PostMapping("/ac")
-    fun saveAcademy(@RequestBody academy: Academy): Msg<*> {
-        TODO()
-    }
+    fun saveAcademy(@RequestBody academy: Academy, principal: Principal): Msg<*> =
+        systemService.saveAcademy(User(username = principal.name), academy)
+
+    //保存专业
+    @PostMapping("/ma")
+    fun saveMajor(@RequestBody major: Major, principal: Principal): Msg<*> =
+        systemService.saveMajor(User(username = principal.name), major)
+
+    //保存学期
+    @PostMapping("/se")
+    fun saveSemester(@RequestBody semester: Semester, principal: Principal): Msg<*> =
+        systemService.saveSemester(User(username = principal.name), semester)
 }

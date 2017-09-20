@@ -22,12 +22,12 @@
                 <tr v-for="(x,idx) in list">
                     <td>{{ x.id }}</td>
                     <td>
-                        <div class="ui input">
+                        <div class="ui small input">
                             <input v-model="x.courseName">
                         </div>
                     </td>
                     <td>
-                        <div class="ui form">
+                        <div class="ui tiny form">
                             <div class="field">
                                 <select v-model="x.semester.id">
                                     <option v-for="s in semester" :value="s.id">{{ s.name }}</option>
@@ -36,7 +36,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="ui form">
+                        <div class="ui tiny form">
                             <div class="field">
                                 <select v-model="x.academy.id">
                                     <option v-for="a in academy" :value="a.id">{{ a.name }}</option>
@@ -45,7 +45,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="ui form">
+                        <div class="ui tiny form">
                             <div class="field">
                                 <select v-model="x.teacher.username">
                                     <option v-for="t in teachers" :value="t.username">
@@ -56,13 +56,13 @@
                         </div>
                     </td>
                     <td>
-                        <div class="ui input"><input v-model="x.credit"></div>
+                        <div class="ui small input"><input v-model="x.credit"></div>
                     </td>
                     <td>
-                        <div class="ui input"><input v-model="x.week"></div>
+                        <div class="ui small input"><input v-model="x.week"></div>
                     </td>
                     <td>
-                        <div class="ui form">
+                        <div class="ui tiny form">
                             <div class="field">
                                 <select v-model="x.day" :value="x.day">
                                     <option value="1">周一</option>
@@ -77,7 +77,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="ui form">
+                        <div class="ui tiny form">
                             <div class="field">
                                 <select v-model="x.courseOrder" :value="x.courseOrder">
                                     <option value="1">第一节</option>
@@ -90,10 +90,10 @@
                         </div>
                     </td>
                     <td>
-                        <div class="ui input"><input v-model="x.total"></div>
+                        <div class="ui small input"><input v-model="x.total"></div>
                     </td>
                     <td>
-                        <div class="ui input"><input v-model="x.location"></div>
+                        <div class="ui small input"><input v-model="x.location"></div>
                     </td>
                     <td>
                         <div class="mini ui primary button" @click="updateCourse(idx)">更&nbsp;新</div>

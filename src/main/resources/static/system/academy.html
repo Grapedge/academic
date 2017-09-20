@@ -1,60 +1,97 @@
-<div class="ui three column grid" id="academy">
-    <div class="column">
-        <table class="ui top attached celled table">
-            <thead>
-            <tr>
-                <th>专业名称</th>
-                <th>所属学院</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(x,idx) in major">
-                <td>
-                    <div class="ui input"><input v-model="x.name"></div>
-                </td>
-                <td>
-                    <div class="ui form">
-                        <div class="field">
-                            <select v-model="x.academy.id">
-                                <option v-for="s in academy" :value="s.id">{{ s.name }}</option>
-                            </select>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="mini ui primary button" @click="saveMajor(idx)">更新</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="ui primary button" @click="addMajor()">添加专业</div>
-    </div>
-    <div class="column">
-        <table class="ui celled table">
-            <thead>
-            <tr>
-                <th>学院ID</th>
-                <th>学院名称</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(x,idx) in academy">
-                <td>{{ x.id }}</td>
-                <td>
-                    <div class="ui input"><input v-model="x.name"></div>
-                </td>
-                <td>
-                    <div class="mini ui teal button" @click="saveAcademy(idx)">更新</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="ui primary button" @click="addAcademy()">添加学院</div>
-    </div>
-    <div class="column">
+<div class="ui container">
+    <div class="ui one column grid" id="academy">
 
+        <div class="column">
+            <table class="ui celled compact table">
+                <thead>
+                <tr>
+                    <th>专业名称</th>
+                    <th>所属学院</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(x,idx) in major">
+                    <td>
+                        <div class="ui small input"><input v-model="x.name"></div>
+                    </td>
+                    <td>
+                        <div class="ui tiny form">
+                            <div class="field">
+                                <select v-model="x.academy.id">
+                                    <option v-for="s in academy" :value="s.id">{{ s.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mini ui primary button" @click="saveMajor(idx)">更新</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="ui primary button" @click="addMajor()">添加专业</div>
+        </div>
+
+        <div class="column">
+            <table class="ui celled compact table">
+                <thead>
+                <tr>
+                    <th>学院ID</th>
+                    <th>学院名称</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(x,idx) in academy">
+                    <td>{{ x.id }}</td>
+                    <td>
+                        <div class="ui small input"><input v-model="x.name"></div>
+                    </td>
+                    <td>
+                        <div class="mini ui teal button" @click="saveAcademy(idx)">更新</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="ui primary button" @click="addAcademy()">添加学院</div>
+        </div>
+
+        <div class="column">
+            <table class="ui celled compact table">
+                <thead>
+                <tr>
+                    <th>学期名</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(x,idx) in semester">
+                    <td>
+                        <div class="ui small input">
+                            <input v-model="x.name">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui small input">
+                            <input v-model="x.beginDate">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui small input">
+                            <input v-model="x.endDate">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mini ui secondary button" @click="saveSemester(idx)">更新</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="ui primary button" @click="addSemester()">添加学期</div>
+        </div>
     </div>
 </div>
 <script>
@@ -95,14 +132,44 @@
                     }
                 })
             },
-            saveAcademy: function () {
-
+            saveAcademy: function (id) {
+                var _self = this;
+                $.ajax({
+                    url: 's/ac', type: 'post', contentType: 'application/json', dataType: 'json',
+                    data: JSON.stringify(_self.academy[id]),
+                    success: function (res) {
+                        showTip(res.msg)
+                    },
+                    error: function () {
+                        showTip('网络错误, 请检查网络连接')
+                    }
+                });
             },
-            saveSemester: function () {
-
+            saveSemester: function (id) {
+                var _self = this;
+                $.ajax({
+                    url: 's/se', type: 'post', contentType: 'application/json', dataType: 'json',
+                    data: JSON.stringify(_self.semester[id]),
+                    success: function (res) {
+                        showTip(res.msg)
+                    },
+                    error: function () {
+                        showTip('网络错误, 请检查网络连接')
+                    }
+                });
             },
             saveMajor: function (id) {
-
+                var _self = this;
+                $.ajax({
+                    url: 's/ma', type: 'post', contentType: 'application/json', dataType: 'json',
+                    data: JSON.stringify(_self.major[id]),
+                    success: function (res) {
+                        showTip(res.msg)
+                    },
+                    error: function () {
+                        showTip('网络错误, 请检查网络连接')
+                    }
+                });
             },
             addMajor: function () {
                 this.major.push(JSON.parse(JSON.stringify(this.major[this.major.length - 1])));
