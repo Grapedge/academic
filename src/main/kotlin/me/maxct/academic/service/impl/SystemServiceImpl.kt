@@ -31,6 +31,9 @@ class SystemServiceImpl : SystemService {
     @Autowired
     private lateinit var majorRepository: MajorRepository
 
+    @Autowired
+    private lateinit var profileRepository: ProfileRepository
+
     override fun importStudentInfo(operator: User, users: List<User>): Msg<*> {
         userRepository.save(users)
         return Msg.ok("执行完毕")
@@ -71,4 +74,7 @@ class SystemServiceImpl : SystemService {
         val u = userRepository.findOneByUsername(id) ?: return Msg.err("用户不存在")
         return Msg.ok("ok", u)
     }
+
+    override fun updateProfileInBatch(operator: User, list: List<Profile>): Msg<*> =
+        Msg.ok("ok", profileRepository.save(list).size)
 }

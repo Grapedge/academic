@@ -1,46 +1,48 @@
-<div class="ui grid" id="user-info">
-    <div class="row">
-        <div class="column">
-            <div class="ui form">
-                <div class="fields">
-                    <div class="field">
-                        <label>学工号</label>
-                        <input v-model="limit.workNo">
+<div class="ui container">
+    <div class="ui grid" id="user-info">
+        <div class="row">
+            <div class="column">
+                <div class="ui form">
+                    <div class="fields">
+                        <div class="field">
+                            <label>学工号</label>
+                            <input v-model="limit.workNo">
+                        </div>
+                        <div class="field">
+                            <label>性别</label>
+                            <select v-model="limit.gender">
+                                <option>未知</option>
+                                <option>男</option>
+                                <option>女</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>专业</label>
+                            <select v-model="limit.major">
+                                <option v-for="x in majors" :value="x.id">{{ x.name }}</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>身份</label>
+                            <select v-model="limit.role">
+                                <option value="ROLE_USER">学生</option>
+                                <option value="ROLE_USER,ROLE_ADMIN">教工</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="field">
-                        <label>性别</label>
-                        <select v-model="limit.gender">
-                            <option>未知</option>
-                            <option>男</option>
-                            <option>女</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>专业</label>
-                        <select v-model="limit.major">
-                            <option v-for="x in majors" :value="x.id">{{ x.name }}</option>
-                        </select>
-                    </div>
-                    <div class="field">
-                        <label>身份</label>
-                        <select v-model="limit.role">
-                            <option value="ROLE_USER">学生</option>
-                            <option value="ROLE_USER,ROLE_ADMIN">教工</option>
-                        </select>
-                    </div>
+                    <div class="ui teal button" @click="searchUser()">查找</div>
                 </div>
-                <div class="ui teal button" @click="searchUser()">查找</div>
             </div>
         </div>
-    </div>
-    <div class="ui divider"></div>
-    <div class="row">
-        <div class="column" v-show="res">
-            <div class="ui buttons">
-                <div class="ui primary button">导出数据</div>
-                <div class="ui teal button">上传数据</div>
-            </div>
-            <div id="table2">
+        <div class="ui divider"></div>
+        <div class="row">
+            <div class="column" v-show="res">
+                <div class="ui buttons">
+                    <div class="ui primary button" @click="exportT()">导出数据</div>
+                    <div class="ui teal button" @click="updateUserInfo()">上传数据</div>
+                </div>
+                <div id="table2">
+                </div>
             </div>
         </div>
     </div>
@@ -92,8 +94,29 @@
                     }
                 });
             },
+            exportT: function () {
+                doIt(parseData(table_data), 'xlsx', '用户信息.xlsx');
+            },
             updateUserInfo: function () {
-
+                var _self = this;
+                var offset = getOffsetData(_self.res);
+                if (offset && offset.length > 0) {
+                    if (confirm(`共有${offset.length}条更改, 确定上传吗?`)) {
+                        $.ajax({
+                            url: 's/b', type: 'post', dataType: 'json', contentType: 'application/json',
+                            data: JSON.stringify({list: offset}),
+                            success: function (res) {
+                                if (res.ok) showTip(`上传完成, 更新了${res.obj}条数据`)
+                                else showTip(res.msg);
+                            },
+                            error: function () {
+                                showTip('网络错误, 请检查网络连接')
+                            }
+                        })
+                    }
+                } else {
+                    alert('数据未更改');
+                }
             }
         }
     });
@@ -113,15 +136,29 @@
             height: 500
         });
     }
+
     function getOffsetData(ori) {
         var res = [];
-        for (var i=0; i<ori.length; i++){
-            if (ori[i].id == table_data[i].id){
+        for (var i = 0; i < ori.length; i++) {
+            if (ori[i].id == table_data[i].id) {
                 var a = JSON.stringify(ori[i]), b = JSON.stringify(table_data[i]);
                 if (a != b) res.push(table_data[i]);
             }
         }
         return res;
     }
+
+    function parseData(arr) {
+        var res = [];
+        res[0] = ['姓名', '身份证', '性别', '专业', '学院', '生日', '单位/班级', '学工号', '地址'];
+        for (var i = 0; i < arr.length; i++) {
+            res[i + 1] = [
+                arr[i].name, arr[i].idNo, arr[i].gender, arr[i].major.name, arr[i].major.academy.name,
+                arr[i].birthday, arr[i].unit, arr[i].workNo, arr[i].address
+            ];
+        }
+        return res;
+    }
+
     user_info.loadData();
 </script>

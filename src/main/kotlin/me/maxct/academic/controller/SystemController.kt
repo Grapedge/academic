@@ -1,11 +1,12 @@
 package me.maxct.academic.controller
 
+import me.maxct.academic.bean.Info
+import me.maxct.academic.bean.Information
 import me.maxct.academic.bean.Msg
 import me.maxct.academic.entity.*
-import me.maxct.academic.repository.MajorRepository
-import me.maxct.academic.repository.ProfileRepository
-import me.maxct.academic.repository.SettingRepository
+import me.maxct.academic.repository.*
 import me.maxct.academic.service.SystemService
+import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
@@ -28,6 +29,10 @@ class SystemController {
     private lateinit var profileRepository: ProfileRepository
     @Autowired
     private lateinit var majorRepository: MajorRepository
+    @Autowired
+    private lateinit var userRepository: UserRepository
+    @Autowired
+    private lateinit var courseRepository: CourseRepository
 
     //创建学院
     @PostMapping("/a")
@@ -91,6 +96,7 @@ class SystemController {
         if (settingRepository.save(Setting(name, value)) != null) Msg.ok("ok")
         else Msg.err("更新失败")
 
+    //搜索用户信息
     @PostMapping("/info")
     fun getUsersInfo(@RequestParam(required = false) workNo: String?, @RequestParam(required = false) gender: String?,
                      @RequestParam(required = false) major: Long?, @RequestParam(required = false) role: String?): Msg<*> {
@@ -109,5 +115,52 @@ class SystemController {
         val res = profileRepository.findAll(e)
         if (m != null) res.removeIf({ it -> m != it.major })
         return Msg.ok("ok", res)
+    }
+
+    //批量更新profile
+    @PostMapping("/b")
+    fun batchUpdate(@RequestBody info: Information, principal: Principal): Msg<*> {
+        val list = ArrayList<Long>()
+        info.list.mapTo(list) { it.id!! }
+        val arr = profileRepository.findAll(list)
+        val NP = ArrayList<Profile>()
+        arr.indices
+            .filter { arr[it].id == info.list[it].id }
+            .mapTo(NP) {
+                Profile(
+                    id = arr[it].id,
+                    user = arr[it].user,
+                    unit = info.list[it].unit ?: arr[it].unit,
+                    name = info.list[it].name ?: arr[it].name,
+                    idNo = info.list[it].idNo ?: arr[it].idNo,
+                    birthday = info.list[it].birthday ?: arr[it].birthday,
+                    address = info.list[it].address ?: arr[it].address,
+                    major = arr[it].major,
+                    workNo = info.list[it].workNo ?: arr[it].workNo,
+                    gender = info.list[it].gender ?: arr[it].gender
+                )
+            }
+        return systemService.updateProfileInBatch(User(username = principal.name), NP)
+    }
+
+    //获取所有教师
+    @GetMapping("/t")
+    fun getAllTeachers(principal: Principal): Msg<*> =
+        Msg.ok("ok", userRepository.findByRoles("ROLE_USER,ROLE_ADMIN"))
+
+    //获取所有课程
+    @GetMapping("/c")
+    fun getAllCourses(principal: Principal): Msg<*> =
+        Msg.ok("ok", courseRepository.findAll())
+
+    //更新课程信息
+    @PostMapping("/uc")
+    fun updateCourse(@RequestBody course: Course): Msg<*> {
+        val c = courseRepository.save(course)
+        return if (c != null) {
+            Msg.ok("ok", c)
+        } else {
+            Msg.err("保存失败")
+        }
     }
 }

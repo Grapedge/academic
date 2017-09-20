@@ -89,4 +89,9 @@ class UserController {
     @GetMapping("/n")
     fun getNotice(): Msg<*> =
         Msg.ok("ok", settingRepository.findOne(AppConst.CONFIG_NOTICE))
+
+    //获取学期
+    @GetMapping("/st")
+    fun getSemesters(): Msg<*> =
+        Msg.ok("ok", semesterRepository.findAll())
 }

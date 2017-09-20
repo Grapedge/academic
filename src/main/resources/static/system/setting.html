@@ -1,44 +1,46 @@
-<div class="ui grid" id="setting">
-    <table class="ui celled table">
-        <thead>
-        <tr>
-            <th>设置</th>
-            <th>内容</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>选课开关</td>
-            <td>
-                <div class="ui form">
-                    <div class="field">
-                        <select v-model="list.selectOn">
-                            <option value="true">开启</option>
-                            <option value="false">关闭</option>
-                        </select>
+<div class="ui container">
+    <div class="ui grid" id="setting">
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th>设置</th>
+                <th>内容</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>选课开关</td>
+                <td>
+                    <div class="ui form">
+                        <div class="field">
+                            <select v-model="list.selectOn">
+                                <option value="true">开启</option>
+                                <option value="false">关闭</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
-                <div class="ui primary button" @click="updateSwitch()">更新</div>
-            </td>
-        </tr>
-        <tr>
-            <td>选课公告</td>
-            <td>
-                <div class="ui form">
-                    <div class="field">
-                        <textarea v-model="list.notice"></textarea>
+                </td>
+                <td>
+                    <div class="ui primary button" @click="updateSwitch()">更新</div>
+                </td>
+            </tr>
+            <tr>
+                <td>选课公告</td>
+                <td>
+                    <div class="ui form">
+                        <div class="field">
+                            <textarea v-model="list.notice"></textarea>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>
-                <div class="ui primary button" @click="updateNotice()">更新</div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                </td>
+                <td>
+                    <div class="ui primary button" @click="updateNotice()">更新</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     var setting = new Vue({

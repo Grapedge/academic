@@ -44,10 +44,10 @@ COMMIT;
 
 BEGIN;
 INSERT IGNORE INTO `aca_course` (id, course_name, credit, remaining, total, week,
-                                 academy_id, semester_id, teacher_username, flag, day, course_order) VALUES
-  (1, '软件工程', 4.5, 198, 200, '001111111111110000', 1, 1, 'teacher1', 16380, 1, 1),
-  (2, '计算机网络', 5.0, 218, 220, '001111110011110000', 1, 2, 'teacher2', 15612, 1, 2),
-  (3, '计算机网络', 5.0, 220, 220, '001111110011110000', 2, 2, 'teacher2', 15612, 1, 2);
+                                 academy_id, semester_id, teacher_username, flag, day, course_order, location) VALUES
+  (1, '软件工程', 4.5, 198, 200, '001111111111110000', 1, 1, 'teacher1', 16380, 1, 1, '五区107'),
+  (2, '计算机网络', 5.0, 218, 220, '001111110011110000', 1, 2, 'teacher2', 15612, 1, 2, '一区201'),
+  (3, '计算机网络', 5.0, 220, 220, '001111110011110000', 2, 2, 'teacher2', 15612, 1, 2, '四区112');
 COMMIT;
 
 BEGIN ;

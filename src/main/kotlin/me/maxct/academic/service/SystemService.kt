@@ -67,4 +67,6 @@ interface SystemService {
      * @return dto
      */
     fun getUserInfo(operator: User, id: String): Msg<*>
+
+    fun updateProfileInBatch(operator: User, list: List<Profile>): Msg<*>
 }

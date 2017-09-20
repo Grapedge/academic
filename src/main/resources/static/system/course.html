@@ -1,0 +1,185 @@
+<div class="ui grid" id="courses">
+    <div class="row">
+        <div class="column">
+            <table class="ui celled compact table">
+                <thead>
+                <tr>
+                    <th>课程ID</th>
+                    <th>课程名称</th>
+                    <th>学期</th>
+                    <th>开设学院</th>
+                    <th>任课教师</th>
+                    <th>学分</th>
+                    <th>上课周次</th>
+                    <th>上课星期</th>
+                    <th>上课节次</th>
+                    <th>课程容量</th>
+                    <th>上课地点</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(x,idx) in list">
+                    <td>{{ x.id }}</td>
+                    <td>
+                        <div class="ui input">
+                            <input v-model="x.courseName">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui form">
+                            <div class="field">
+                                <select v-model="x.semester.id">
+                                    <option v-for="s in semester" :value="s.id">{{ s.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui form">
+                            <div class="field">
+                                <select v-model="x.academy.id">
+                                    <option v-for="a in academy" :value="a.id">{{ a.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui form">
+                            <div class="field">
+                                <select v-model="x.teacher.username">
+                                    <option v-for="t in teachers" :value="t.username">
+                                        {{ t.profile? t.profile.name : t.username}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui input"><input v-model="x.credit"></div>
+                    </td>
+                    <td>上课周次</td>
+                    <td>
+                        <div class="ui form">
+                            <div class="field">
+                                <select v-model="x.day" :value="x.day">
+                                    <option value="1">周一</option>
+                                    <option value="2">周二</option>
+                                    <option value="3">周三</option>
+                                    <option value="4">周四</option>
+                                    <option value="5">周五</option>
+                                    <option value="6">周六</option>
+                                    <option value="7">周日</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui form">
+                            <div class="field">
+                                <select v-model="x.courseOrder" :value="x.courseOrder">
+                                    <option value="1">第一节</option>
+                                    <option value="2">第二节</option>
+                                    <option value="3">第三节</option>
+                                    <option value="4">第四节</option>
+                                    <option value="5">第五节</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ui input"><input v-model="x.total"></div>
+                    </td>
+                    <td>
+                        <div class="ui input"><input v-model="x.location"></div>
+                    </td>
+                    <td>
+                        <div class="mini ui primary button" @click="updateCourse(idx)">更&nbsp;新</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui primary button" @click="addCourse()">添加课程</div>
+        </div>
+    </div>
+</div>
+<script>
+    var courses = new Vue({
+        el: '#courses',
+        data: {list: null, academy: [], semester: [], teachers: []},
+        methods: {
+            loadData: function () {
+                var _self = this;
+                //load academy
+                $.ajax({
+                    url: 'u/a', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.academy = res.obj;
+                    },
+                    error: function () {
+                        throw new Error('load academy error')
+                    }
+                });
+                //load semester
+                $.ajax({
+                    url: 'u/st', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.semester = res.obj;
+                    },
+                    error: function () {
+                        throw new Error('load semester error')
+                    }
+                });
+                //load teachers
+                $.ajax({
+                    url: 's/t', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.teachers = res.obj;
+                    },
+                    error: function () {
+                        throw new Error('load teacher error')
+                    }
+                });
+                //load course
+                $.ajax({
+                    url: 's/c', type: 'get', dataType: 'json',
+                    success: function (res) {
+                        if (res.ok) _self.list = res.obj;
+                    },
+                    error: function () {
+                        throw new Error('load teacher error')
+                    }
+                });
+            },
+            updateCourse: function (id) {
+                var _self = this;
+                $.ajax({
+                    url: 's/uc', type: 'post', data: JSON.stringify(_self.list[id]),
+                    dataType: 'json', contentType: 'application/json',
+                    success: function (res) {
+                        if (res) {
+                            showTip('更新成功');
+                            if (res.obj){
+                                _self.list[id] = res.obj;
+                            }
+                        }
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('网络错误, 请检查网络连接');
+                    }
+                })
+            },
+            addCourse: function () {
+                var _self = this;
+                _self.list.push(JSON.parse(JSON.stringify(_self.list[_self.list.length - 1])));
+                _self.list[_self.list.length - 1].id = null;
+            }
+        }
+    });
+    courses.loadData();
+</script>

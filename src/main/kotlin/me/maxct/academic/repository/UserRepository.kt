@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository
 interface UserRepository : JpaRepository<User, String> {
 
     fun findOneByUsername(username: String): User?
+
+    fun findByRoles(roles: String): List<User>
 }
