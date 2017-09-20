@@ -58,7 +58,9 @@
                     <td>
                         <div class="ui input"><input v-model="x.credit"></div>
                     </td>
-                    <td>上课周次</td>
+                    <td>
+                        <div class="ui input"><input v-model="x.week"></div>
+                    </td>
                     <td>
                         <div class="ui form">
                             <div class="field">
@@ -163,7 +165,7 @@
                     success: function (res) {
                         if (res) {
                             showTip('更新成功');
-                            if (res.obj){
+                            if (res.obj) {
                                 _self.list[id] = res.obj;
                             }
                         }

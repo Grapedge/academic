@@ -156,11 +156,17 @@ class SystemController {
     //更新课程信息
     @PostMapping("/uc")
     fun updateCourse(@RequestBody course: Course): Msg<*> {
+        course.flag = Integer.parseInt(course.week?.reversed(), 2)
         val c = courseRepository.save(course)
         return if (c != null) {
             Msg.ok("ok", c)
         } else {
             Msg.err("保存失败")
         }
+    }
+
+    @PostMapping("/ac")
+    fun saveAcademy(@RequestBody academy: Academy): Msg<*> {
+        TODO()
     }
 }
