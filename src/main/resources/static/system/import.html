@@ -1,6 +1,6 @@
 <style>
     #drop {
-        min-height: 80px;
+        min-height: 100px;
         border: 2px dashed lightgrey;
         border-radius: 5px;
         text-align: center;
@@ -26,6 +26,49 @@
                     <div class="field">
                         <label>姓名</label>
                         <select v-model="name">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>身份证</label>
+                        <select v-model="idNo">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>性别</label>
+                        <select v-model="gender">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>专业ID</label>
+                        <select v-model="major">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>生日</label>
+                        <select v-model="birthday">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>单位/班级</label>
+                        <select v-model="unit">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>学工号</label>
+                        <select v-model="workNo">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>地址</label>
+                        <select v-model="address">
+                            <option v-for="(x,idx) in header" :value="idx">{{ x }}</option>
                         </select>
                     </div>
                 </div>
@@ -49,7 +92,25 @@
 
     var info = new Vue({
         el: '#hash',
-        data: {hasHeader: true, name: null, }
+        data: {
+            hasHeader: true, name: null,idNo: null, gender: null, major: null, birthday: null,
+            unit: null, workNo: null, address: null,
+            header: function () {
+                var res = [];
+                if (file_data) {
+                    if (this.hasHeader) {
+                        for (var i=0; i < file_data[0].length; i++) {
+                            res[i] = file_data[0][i];
+                        }
+                    }else {
+                        for (var i=0; i<file_data[0].length; i++) {
+                            res[i] = String.fromCharCode(65 + i);
+                        }
+                    }
+                }
+                return res;
+            }
+        }
     });
 
     var _target = document.getElementById('drop');
@@ -97,35 +158,18 @@
         $window.on('resize', calculateSize);
     });
 
-    /* make the buttons for the sheets */
-    var make_buttons = function (sheetnames, cb) {
-        var $buttons = $('#buttons');
-        $buttons.html("");
-        sheetnames.forEach(function (s, idx) {
-            var button = $('<button/>').attr({type: 'button', name: 'btn' + idx, text: s});
-            button.append('<h3>' + s + '</h3>');
-            button.click(function () {
-                cb(idx);
-            });
-            $buttons.append(button);
-            $buttons.append('<br/>');
-        });
-    };
 
     var _onsheet = function (json, sheetnames, select_sheet_cb) {
-        $('#footnote').hide();
 
-        make_buttons(sheetnames, select_sheet_cb);
         calculateSize();
 
-        /* add header row for table */
         if (!json) json = [];
         json.forEach(function (r) {
             if (json[0].length < r.length) json[0].length = r.length;
         });
-        file_data = json;/*JSON.parse(JSON.stringify(json));*/
+        file_data = json;
+        /*JSON.parse(JSON.stringify(json));*/
         calculateSize();
-        /* showtime! */
         $("#hot").handsontable({
             data: json,
             startRows: 5,
