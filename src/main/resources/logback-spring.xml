@@ -15,7 +15,7 @@
         <connectionSource class="ch.qos.logback.core.db.DataSourceConnectionSource">
             <dataSource class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <driverClass>com.mysql.jdbc.Driver</driverClass>
-                <jdbcUrl>jdbc:mysql://localhost:3306/log?useUnicode=true&amp;characterEncoding=utf8</jdbcUrl>
+                <jdbcUrl>jdbc:mysql://localhost:3306/academic?useUnicode=true&amp;characterEncoding=utf8</jdbcUrl>
                 <user>root</user>
                 <password>million</password>
             </dataSource>
@@ -23,11 +23,11 @@
     </appender>
 
     <logger name="me.maxct.academic.aop.WebLog" additivity="false">
-        <appender-ref ref="WebLog"/>
+        <appender-ref ref="ServiceLog"/>
     </logger>
 
     <logger name="me.maxct.academic.aop.ServiceLog" additivity="false">
-        <appender-ref ref="ServiceLog"/>
+        <appender-ref ref="WebLog"/>
     </logger>
 
     <root level="INFO">

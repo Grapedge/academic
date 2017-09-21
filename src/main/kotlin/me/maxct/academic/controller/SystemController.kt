@@ -1,17 +1,17 @@
 package me.maxct.academic.controller
 
-import me.maxct.academic.bean.Information
-import me.maxct.academic.bean.Msg
-import me.maxct.academic.bean.Profiles
+import me.maxct.academic.bean.*
 import me.maxct.academic.entity.*
 import me.maxct.academic.repository.*
 import me.maxct.academic.service.SystemService
+import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
+import java.time.ZoneId
 
 /**
  * Created by imaxct on 17-9-6.
@@ -32,6 +32,8 @@ class SystemController {
     private lateinit var userRepository: UserRepository
     @Autowired
     private lateinit var courseRepository: CourseRepository
+    @Autowired
+    private lateinit var logRepostory: LogRepository
 
     //创建学院
     @PostMapping("/a")
@@ -179,6 +181,7 @@ class SystemController {
     fun saveSemester(@RequestBody semester: Semester, principal: Principal): Msg<*> =
         systemService.saveSemester(User(username = principal.name), semester)
 
+    //批量导入用户
     @PostMapping("/bi")
     fun batchImport(@RequestBody profiles: Profiles, principal: Principal): Msg<*> {
         val list = ArrayList<Profile>()
@@ -195,5 +198,34 @@ class SystemController {
             )
         }
         return systemService.importProfileInBatch(User(username = principal.name), list, profiles.teacher)
+    }
+
+    @PostMapping("/log")
+    fun getLog(@RequestBody period: Period): Msg<*> {
+        val s = period.s!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        val t = period.t!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        var res = ArrayList<EventLog>()
+        var list = logRepostory.getLogByTime(s, t)
+        for (x in list) {
+            val arr = x.formattedMessage!!.split("\n")
+            val username = arr[0].substring("USERNAME: ".length)
+            val uri = arr[1].substring("URL: ".length)
+            val type = arr[2].substring("METHOD: ".length)
+            val ip = arr[3].substring("IP: ".length)
+            val args = arr[4].substring("ARGS: ".length)
+            val name = StringUtil.getUriName(uri, type.equals("get", true))
+            val o = EventLog(
+                id = x.eventId,
+                username = username,
+                uri= uri,
+                type = type,
+                name = name,
+                args = args,
+                ip = ip,
+                timestamp = x.timestmp
+            )
+            res.add(o)
+        }
+        return Msg.ok("ok", res)
     }
 }

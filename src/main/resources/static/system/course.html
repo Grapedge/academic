@@ -159,6 +159,7 @@
             },
             updateCourse: function (id) {
                 var _self = this;
+                _self.list[id].remaining = _self.list[id].total;
                 $.ajax({
                     url: 's/uc', type: 'post', data: JSON.stringify(_self.list[id]),
                     dataType: 'json', contentType: 'application/json',
@@ -180,6 +181,7 @@
                 var _self = this;
                 _self.list.push(JSON.parse(JSON.stringify(_self.list[_self.list.length - 1])));
                 _self.list[_self.list.length - 1].id = null;
+                _self.list[_self.list.length - 1].remaining = _self.list[_self.list.length - 1].total;
             }
         }
     });

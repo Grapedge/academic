@@ -1,0 +1,74 @@
+<div class="ui container" id="log">
+    <div class="row">
+        <div class="column">
+            <div class="ui small form">
+                <div class="fields">
+                    <div class="field">
+                        <label>开始时间</label>
+                        <input type="datetime-local" v-model="s">
+                    </div>
+                    <div class="field">
+                        <label>结束时间</label>
+                        <input type="datetime-local" v-model="t">
+                    </div>
+                </div>
+                <div class="ui secondary button" @click="loadData()">查看</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <table class="ui compact celled table">
+                <thead>
+                <tr>
+                    <th>日志ID</th>
+                    <th>操作用户名</th>
+                    <th>操作名称</th>
+                    <th>请求类型</th>
+                    <th>访问URI</th>
+                    <th>访问IP</th>
+                    <th>参数</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td></td>
+                </tr>
+                <tr v-if="!arr || arr.length == 0">
+                    <td>无日志</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    var log = new Vue({
+        el: '#log',
+        data: {s: null, t: null, arr: null},
+        methods: {
+            loadData: function () {
+                var _self = this;
+                if (!_self.s || !_self.t) {
+                    showTip('未选择时间段');
+                    return;
+                }
+                if (new Date(_self.s).getTime() >= new Date(_self.t).getTime()) {
+                    showTip('时间段设置错误');
+                    return;
+                }
+                $.ajax({
+                    url: 's/log', type: 'post', dataType: 'json', contentType: 'application/json',
+                    data: JSON.stringify({s: _self.s, t: _self.t}),
+                    success: function (res) {
+                        if (res) _self.arr = res.obj;
+                        else showTip(res.msg);
+                    },
+                    error: function () {
+                        showTip('网络错误, 请检查网络连接');
+                    }
+                });
+            }
+        }
+    });
+</script>
