@@ -107,7 +107,7 @@ class UserServiceImpl : UserService {
                 .put("courseName", id?.course?.courseName)
                 .put("teacher", id?.course?.teacher?.profile?.name)
                 .put("credit", id?.course?.credit)
-                .put("total", id?.course?.total)
+                .put("total", (id?.course?.total!! - id.course.remaining!!))
                 .put("score", score)
             arr.add(obj.list)
         }

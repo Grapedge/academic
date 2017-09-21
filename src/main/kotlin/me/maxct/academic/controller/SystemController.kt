@@ -204,25 +204,27 @@ class SystemController {
     fun getLog(@RequestBody period: Period): Msg<*> {
         val s = period.s!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         val t = period.t!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        var res = ArrayList<EventLog>()
-        var list = logRepostory.getLogByTime(s, t)
-        for (x in list) {
-            val arr = x.formattedMessage!!.split("\n")
+        println(s)
+        println(t)
+        val res = ArrayList<EventLog>()
+        val list = logRepostory.getLogByTime(s, t)
+        for ((eventId, timestmp, formattedMessage) in list) {
+            val arr = formattedMessage!!.split("\n")
             val username = arr[0].substring("USERNAME: ".length)
             val uri = arr[1].substring("URL: ".length)
             val type = arr[2].substring("METHOD: ".length)
             val ip = arr[3].substring("IP: ".length)
-            val args = arr[4].substring("ARGS: ".length)
+            val args = arr[5].substring("ARGS: ".length)
             val name = StringUtil.getUriName(uri, type.equals("get", true))
             val o = EventLog(
-                id = x.eventId,
+                id = eventId,
                 username = username,
-                uri= uri,
+                uri = uri,
                 type = type,
                 name = name,
                 args = args,
                 ip = ip,
-                timestamp = x.timestmp
+                timestamp = timestmp
             )
             res.add(o)
         }

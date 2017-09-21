@@ -1,4 +1,4 @@
-<div class="ui container" id="log">
+<div class="ui grid" id="log">
     <div class="row">
         <div class="column">
             <div class="ui small form">
@@ -21,18 +21,25 @@
             <table class="ui compact celled table">
                 <thead>
                 <tr>
-                    <th>日志ID</th>
-                    <th>操作用户名</th>
+                    <th class="collapsing">日志ID</th>
+                    <th class="collapsing">操作用户名</th>
                     <th>操作名称</th>
-                    <th>请求类型</th>
-                    <th>访问URI</th>
+                    <th class="collapsing">请求类型</th>
+                    <th class="collapsing">访问URI</th>
                     <th>访问IP</th>
                     <th>参数</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td></td>
+                <tr v-for="(x,idx) in arr">
+                    <td>{{ x.id }}</td>
+                    <td>{{ x.username }}</td>
+                    <td class="collapsing">{{ x.name }}</td>
+                    <td>{{ x.type }}</td>
+                    <td>{{ x.uri }}</td>
+                    <td>{{ x.ip }}</td>
+                    <td>{{ x.args }}</td>
+
                 </tr>
                 <tr v-if="!arr || arr.length == 0">
                     <td>无日志</td>

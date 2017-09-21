@@ -36,6 +36,9 @@ class UserController {
     //获取当前学期开设课程
     @GetMapping("/c/{id}")
     fun getCourses(@PathVariable id: Int): Msg<*> {
+        val setting = settingRepository.findOne(AppConst.CONFIG_SELECT_ON)
+        if (setting.value.equals("false", true))
+            return Msg.err("当前选课未开始")
         val semester: Semester = semesterRepository.getCurrentSemester()
         return userService.getCourses(semester, id)
     }
@@ -58,14 +61,21 @@ class UserController {
     //选课
     @PostMapping("/c/{id}")
     fun chooseCourse(@PathVariable id: Long, principal: Principal): Msg<*> {
+        val setting = settingRepository.findOne(AppConst.CONFIG_SELECT_ON)
+        if (setting.value.equals("false", true))
+            return Msg.err("当前选课未开始")
         val course = courseRepository.findOne(id)
         return userService.chooseCourse(User(username = principal.name), course)
     }
 
     //退选
     @PostMapping("/d/{id}")
-    fun dropCourse(@PathVariable id: Long, principal: Principal): Msg<*> =
-        userService.dropCourse(User(username = principal.name), Course(id = id))
+    fun dropCourse(@PathVariable id: Long, principal: Principal): Msg<*> {
+        val setting = settingRepository.findOne(AppConst.CONFIG_SELECT_ON)
+        if (setting.value.equals("false", true))
+            return Msg.err("当前选课未开始")
+        return userService.dropCourse(User(username = principal.name), Course(id = id))
+    }
 
     //获取本学期课表
     @GetMapping("/s")

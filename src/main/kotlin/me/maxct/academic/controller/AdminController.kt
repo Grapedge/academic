@@ -7,8 +7,10 @@ import me.maxct.academic.entity.*
 import me.maxct.academic.repository.CourseRepository
 import me.maxct.academic.repository.RecordRepository
 import me.maxct.academic.repository.SelectionRepository
+import me.maxct.academic.repository.SettingRepository
 import me.maxct.academic.service.AdminService
 import me.maxct.academic.service.UserService
+import me.maxct.academic.util.AppConst
 import me.maxct.academic.util.StringUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Sort
@@ -33,6 +35,8 @@ class AdminController {
     private lateinit var selectionRepository: SelectionRepository
     @Autowired
     private lateinit var recordRepository: RecordRepository
+    @Autowired
+    private lateinit var settingRepository: SettingRepository
 
     //获取自己负责的课
     @GetMapping("/c")
@@ -80,14 +84,18 @@ class AdminController {
     //录入成绩
     @PostMapping("/s/{cid}")
     fun updateScore(@PathVariable cid: Long, @RequestParam username: String, @RequestParam s: Double,
-                    principal: Principal): Msg<*> =
-        adminService.createScore(
+                    principal: Principal): Msg<*> {
+        val setting = settingRepository.findOne(AppConst.CONFIG_SELECT_ON)
+        if (setting.value.equals("true", true))
+            return Msg.err("当前正在选课阶段, 不能录入成绩")
+        return adminService.createScore(
             User(username = principal.name),
             Selection(
                 id = SelectionId(Course(id = cid), User(username = username)),
                 score = s
             )
         )
+    }
 
     //添加一条奖惩记录
     @PostMapping("/r")
@@ -145,6 +153,9 @@ class AdminController {
     //批量更新成绩
     @PostMapping("/up")
     fun updateScoreBatch(@RequestBody scores: Scores, principal: Principal): Msg<*> {
+        val setting = settingRepository.findOne(AppConst.CONFIG_SELECT_ON)
+        if (setting.value.equals("true", true))
+            return Msg.err("当前正在选课阶段, 不能录入成绩")
         val cid = Course(id = scores.cid)
         val list = ArrayList<Selection>()
         scores.list
