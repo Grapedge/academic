@@ -18,7 +18,6 @@ import java.security.Principal
 @Component
 class WebLog {
 
-    /*val startTime: ThreadLocal<Long> = ThreadLocal()*/
     private val logger: Logger = LoggerFactory.getLogger(WebLog::class.java)
 
     @Pointcut("execution(* me.maxct.academic.controller.*.*(..))")
@@ -27,7 +26,6 @@ class WebLog {
 
     @Before("webLog()  && args(..,principal)", argNames = "principal")
     fun beforeExec(joinPoint: JoinPoint, principal: Principal) {
-        /*startTime.set(System.currentTimeMillis())*/
 
         val attrs: ServletRequestAttributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes
         val req = attrs.request
@@ -37,13 +35,4 @@ class WebLog {
             "ARGS: $jsonArg")
     }
 
-    /*@AfterReturning(returning = "ret", pointcut = "webLog()")
-    fun afterExec(ret: Any?) {
-        logger.info("\nRESPONSE: $ret")
-    }
-
-    @AfterThrowing(pointcut = "webLog()", throwing = "ex")
-    fun afterThrow(ex: Exception){
-        logger.error("Exception", ex)
-    }*/
 }
