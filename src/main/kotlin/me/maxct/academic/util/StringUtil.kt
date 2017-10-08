@@ -11,14 +11,14 @@ object StringUtil {
 
     fun getUriName(uri: String, get: Boolean): String =
         when {
-            //admin
+        //admin
             uri == "/a/c" -> "获取自己负责的课"
             match(uri, "/a/s/[0-9]{1,}") -> if (get) "查看课的选课情况" else "录入成绩"
             uri == "/a/r" -> if (get) "获取自己操作的奖惩记录" else "添加一条奖惩记录"
             match(uri, "/a/r/[0-9]{1,}") -> "删除奖惩记录"
             uri == "/a/i" -> "查询学生信息"
             uri == "/a/up" -> "批量更新成绩"
-            //user
+        //user
             uri == "/u/ch" -> "获取所有已选课程"
             match(uri, "/u/c/[0-9]{1,}") -> if (get) "获取当前学期开设课程" else "选课"
             uri == "/u/r" -> "获取奖惩记录"
@@ -29,7 +29,7 @@ object StringUtil {
             uri == "/u/m" -> "获取所有专业"
             uri == "/u/n" -> "获取公告"
             uri == "/u/st" -> "获取学期"
-            //system
+        //system
             uri == "/s/a" -> "创建学院"
             uri == "/s/m" -> "创建专业"
             match(uri, "/s/ua/[0-9]{1,}") -> "更新学院信息"

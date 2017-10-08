@@ -87,21 +87,17 @@ class UserController {
 
     //获取所有学院
     @GetMapping("/a")
-    fun getAllAcademy(): Msg<*> =
-        Msg.ok("ok", academyRepository.getAll())
+    fun getAllAcademy(): Msg<*> = Msg.ok("ok", academyRepository.getAll())
 
     //获取所有专业
     @GetMapping("/m")
-    fun getAllMajor(): Msg<*> =
-        Msg.ok("ok", majorRepository.getAll())
+    fun getAllMajor(): Msg<*> = Msg.ok("ok", majorRepository.getAll())
 
     //获取公告
     @GetMapping("/n")
-    fun getNotice(): Msg<*> =
-        Msg.ok("ok", settingRepository.findOne(AppConst.CONFIG_NOTICE))
+    fun getNotice(): Msg<*> = Msg.ok("ok", settingRepository.findOne(AppConst.CONFIG_NOTICE))
 
     //获取学期
     @GetMapping("/st")
-    fun getSemesters(): Msg<*> =
-        Msg.ok("ok", semesterRepository.findAll())
+    fun getSemesters(): Msg<*> = Msg.ok("ok", semesterRepository.findAll())
 }
